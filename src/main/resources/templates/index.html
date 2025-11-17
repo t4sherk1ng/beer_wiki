@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${pageTitle} ?: 'Добро пожаловать'">Добро пожаловать</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+        }
+        .message {
+            padding: 10px;
+            background-color: #e7f3ff;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${pageTitle} ?: 'Главная страница'">Главная страница</h1>
+
+<div th:if="${message}" class="message">
+    <p th:text="${message}">Сообщение от сервера</p>
+</div>
+
+<p>Текущая дата: <span th:text="${#dates.format(currentDate, 'dd.MM.yyyy HH:mm')}">17.11.2025 10:00</span></p>
+
+<ul>
+    <li th:each="item : ${items}" th:text="${item}">Пример элемента</li>
+</ul>
+
+<form th:action="@{/submit}" method="post">
+    <label for="name">Имя:</label>
+    <input type="text" id="name" name="name" th:value="${name}" />
+    <button type="submit">Отправить</button>
+</form>
+</body>
+</html>

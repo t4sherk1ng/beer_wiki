@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+    <hgroup>
+        <h1>Информация о пиве</h1>
+        <p>Подробные сведения о пиве</p>
+    </hgroup>
+    <article class="card">
+        <div class="grid">
+            <div>
+                <h2 th:text="${beerDetails.name}"></h2>
+                <p><strong>Пивоварня:</strong> <span th:text="${beerDetails.brewery}"></span></p>
+                <p><strong>Описание:</strong> <span th:text="${beerDetails.description}"></span></p>
+                <div sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/beers/beer-delete/{company-name}(company-name=${companyDetails.name})}"
+                       role="button"
+                       class="secondary"
+                       onclick="return confirm('Вы уверены, что хотите удалить эту компанию?')">
+                        Удалить пиво
+                    </a>
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

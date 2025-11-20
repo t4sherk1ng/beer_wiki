@@ -93,6 +93,17 @@ public class BeerServiceImpl implements BeerService {
         return avg != null ? avg : 0.0;
     }
 
+    @Override
+    public BeerDetailsDto beerDetails(String beerName) {
+        Beer entity = repository.findByNameWithDetails(beerName);
+        if (entity == null) {
+            throw new RuntimeException("Beer not found with name: " + beerName);
+        }
+        BeerDetailsDto dto = convertToDetailsDto(entity);
+//        dto.setAverageRating(getAverageRating());  // Добавляем расчет
+        return dto;
+    }
+
     private BeerListDto convertToListDto(Beer entity) {
         return modelMapper.map(entity, BeerListDto.class);
     }

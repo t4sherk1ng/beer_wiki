@@ -24,6 +24,12 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
+    private UserRoles role;
+
+    @Column(unique = true, nullable = false)
+    private String password;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+  <hgroup>
+    <h1>Информация о пивоварне</h1>
+    <p>Подробные сведения о пивоварне</p>
+  </hgroup>
+  <article class="card">
+    <div class="grid">
+      <div>
+        <h2 th:text="${brewery.name}"></h2>
+        <p><strong>Пивоварня:</strong> <span th:text="${brewery.name}"></span></p>
+        <p><strong>Описание:</strong> <span th:text="${brewery.description}"></span></p>
+        <p><strong>Локация:</strong> <span th:text="${brewery.location}"></span></p>
+        <div th:each="c : ${brewery.beers}" class="card">
+          <h3 th:text="${c.name}"></h3>
+          <p><strong>Описание:</strong> <span th:text="${c.description}"></span></p>
+        </div>
+      </div>
+    </div>
+  </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

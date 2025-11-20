@@ -15,4 +15,6 @@ public interface BeerService {
     BeerDetailsDto update(Long id, BeerDetailsDto dto);
     void deleteById(Long id);
     double getAverageRating(Long beerId);
+
+    BeerDetailsDto beerDetails(String beerName);
 }

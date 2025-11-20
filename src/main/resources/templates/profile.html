@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/head"/>
+<body>
+<div th:replace="fragments/navbar"></div>
+<main class="container">
+  <hgroup>
+    <h1>Профиль пользователя</h1>
+    <p>Информация о вашей учетной записи</p>
+  </hgroup>
+  <article class="card">
+    <div class="grid">
+      <div th:object="${user}">
+        <p><strong>Логин:</strong> <span th:text="*{username}"></span></p>
+        <p><strong>Email:</strong> <span th:text="*{email}"></span></p>
+        <div th:each="c : ${beerReviews}" class="card">
+          <h3 th:text="${c.name}"></h3>
+          <p><strong>Пиво:</strong> <span th:text="${c.beer}"></span></p>
+          <p><strong>Оценка:</strong> <span th:text="${#strings.abbreviate(c.rating, 100)}"></span></p>
+          <p><strong>Обзор:</strong> <span th:text="${#strings.abbreviate(c.comment, 100)}"></span></p>
+        </div>
+        <div>
+          <strong>Роли:</strong>
+          <div sec:authentication="principal.authorities" style="margin-top: 0.5rem;"></div>
+        </div>
+      </div>
+      <div class="text-center">
+        <img src="/pic/employee.png" alt="Профиль пользователя" style="width: 100%; max-width: 300px; border-radius: var(--pico-border-radius);">
+      </div>
+    </div>
+  </article>
+</main>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

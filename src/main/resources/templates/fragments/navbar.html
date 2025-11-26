@@ -1,26 +1,23 @@
-<nav xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
-    <div class="container">
-        <ul>
-            <li><strong><a href="/" style="text-decoration: none;">Управление компаниями</a></strong></li>
-        </ul>
-        <ul>
-            <li><a href="/">Главная</a></li>
-            <li sec:authorize="hasRole('ADMIN')"><a href="/companies/add">Добавить компанию</a></li>
-            <li sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')"><a href="/employees/add">Добавить сотрудника</a></li>
-            <li><a href="/companies/all">Компании</a></li>
-            <li><a href="/employees/all">Сотрудники</a></li>
-            <li sec:authorize="isAuthenticated()">
-                <a href="/users/profile" role="button" class="secondary outline">
-                    <th:block sec:authentication="name"></th:block>
-                </a>
-            </li>
-            <li sec:authorize="isAuthenticated()">
-                <form th:method="post" th:action="@{/users/logout}" style="margin: 0;">
-                    <button type="submit" class="contrast outline">Выйти</button>
-                </form>
-            </li>
-            <li sec:authorize="!isAuthenticated()"><a href="/users/register" role="button">Регистрация</a></li>
-            <li sec:authorize="!isAuthenticated()"><a href="/users/login" role="button" class="secondary">Вход</a></li>
-        </ul>
+<nav th:fragment="navbar" style="
+    background: #141414;
+    border-bottom: 2px solid #3c3c3c;
+    padding: 15px 0;
+">
+    <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+
+
+        <a href="/"
+           style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+            <span style="font-family: 'Cinzel', serif; font-size: 20px; color: #e6e3df;">
+                Beer Wiki
+            </span>
+        </a>
+
+
+        <div style="display: flex; gap: 20px; font-size: 16px;">
+            <a href="/" style="color: #e6e3df;">Главная</a>
+            <a href="/beers/all-beers" style="color: #e6e3df;">Все сорта</a>
+            <a href="/beers/add" style="color: #e6e3df;">Добавить</a>
+        </div>
     </div>
 </nav>

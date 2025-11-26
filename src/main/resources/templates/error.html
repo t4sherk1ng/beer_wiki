@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/head :: head('Beer Wiki — Упс, ошибка')"></head>
+
+<body>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
+<main class="container">
+    <section style="max-width: 600px; margin: 60px auto; text-align: center;">
+        <h1 style="font-family: 'Cinzel', serif; font-size: 42px; margin-bottom: 10px;">
+            Что‑то пошло не так…
+        </h1>
+        <p style="color: #b3b3b3; margin-bottom: 25px;">
+            Кажется, пиво разлилось по серверу, и произошла ошибка.
+            Мы уже наливаем новое — попробуйте вернуться на главную страницу.
+        </p>
+
+        <a href="/"
+           style="
+                display: inline-block;
+                margin-top: 10px;
+                padding: 10px 22px;
+                border-radius: 6px;
+                background: #d4a048;
+                color: #1b1b1b;
+                font-weight: 600;
+                text-decoration: none;
+           ">
+            На главную
+        </a>
+
+        <p style="margin-top: 25px; font-size: 13px; color: #777;">
+            Если ошибка повторяется, попробуйте обновить страницу позже
+            или вернуться к другим разделам энциклопедии.
+        </p>
+    </section>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

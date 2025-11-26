@@ -1,31 +1,51 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head"/>
+
+<head th:replace="fragments/head :: head('Beer Wiki — Детали пива')"></head>
+
 <body>
-<div th:replace="fragments/navbar"></div>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <main class="container">
-    <hgroup>
-        <h1>Информация о пиве</h1>
-        <p>Подробные сведения о пиве</p>
-    </hgroup>
-    <article class="card">
-        <div class="grid">
-            <div>
-                <h2 th:text="${beerDetails.name}"></h2>
-                <p><strong>Пивоварня:</strong> <span th:text="${beerDetails.brewery}"></span></p>
-                <p><strong>Описание:</strong> <span th:text="${beerDetails.description}"></span></p>
-                <div sec:authorize="hasRole('ADMIN')">
-                    <a th:href="@{/beers/beer-delete/{company-name}(company-name=${companyDetails.name})}"
-                       role="button"
-                       class="secondary"
-                       onclick="return confirm('Вы уверены, что хотите удалить эту компанию?')">
+    <section style="max-width: 800px; margin: 0 auto;">
+        <hgroup>
+            <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Информация о пиве</h1>
+            <p style="margin-top: 0;">Подробные сведения о сорте</p>
+        </hgroup>
+
+        <article class="card" style="margin-top: 20px;">
+            <header style="margin-bottom: 15px;">
+                <h2 th:text="${beerDetails.name}"
+                    style="font-size: 26px; margin: 0 0 10px;"></h2>
+                <p style="margin: 0; color: #b3b3b3;">
+                    Пивоварня:
+                    <strong th:text="${beerDetails.breweryName}"></strong>
+                </p>
+            </header>
+
+            <section>
+                <h3 style="margin-top: 0; color: #d4a048;">Описание</h3>
+                <p th:text="${beerDetails.description}"></p>
+            </section>
+
+            <footer style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="/beers/all-beers"
+                   style="padding: 8px 16px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    ← Назад к списку
+                </a>
+
+                <sec:authorize access="hasRole('ADMIN')">
+                    <a th:href="@{/beers/delete/{id}(id=${beerDetails.id})}"
+                       onclick="return confirm('Вы уверены, что хотите удалить это пиво?')"
+                       style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
                         Удалить пиво
                     </a>
-                </div>
-            </div>
-        </div>
-    </article>
+                </sec:authorize>
+            </footer>
+        </article>
+    </section>
 </main>
-<footer th:replace="fragments/footer"></footer>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

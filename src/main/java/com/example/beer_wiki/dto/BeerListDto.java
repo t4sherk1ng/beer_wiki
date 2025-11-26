@@ -14,6 +14,8 @@ public class BeerListDto {
     private int ibu;  // Горечь
     private String breweryName;  // Название пивоварни
     private double averageRating;
+    private String imageUrl;
+    private String description;
 
     public BeerListDto() {}
 }

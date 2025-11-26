@@ -1,28 +1,72 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head"/>
+
+<head th:replace="fragments/head :: head('Beer Wiki — Пивоварня')"></head>
+
 <body>
-<div th:replace="fragments/navbar"></div>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <main class="container">
-  <hgroup>
-    <h1>Информация о пивоварне</h1>
-    <p>Подробные сведения о пивоварне</p>
-  </hgroup>
-  <article class="card">
-    <div class="grid">
-      <div>
-        <h2 th:text="${brewery.name}"></h2>
-        <p><strong>Пивоварня:</strong> <span th:text="${brewery.name}"></span></p>
-        <p><strong>Описание:</strong> <span th:text="${brewery.description}"></span></p>
-        <p><strong>Локация:</strong> <span th:text="${brewery.location}"></span></p>
-        <div th:each="c : ${brewery.beers}" class="card">
-          <h3 th:text="${c.name}"></h3>
-          <p><strong>Описание:</strong> <span th:text="${c.description}"></span></p>
-        </div>
-      </div>
-    </div>
-  </article>
+    <section style="max-width: 900px; margin: 0 auto;">
+        <hgroup>
+            <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Информация о пивоварне</h1>
+            <p style="margin-top: 0;">Подробные сведения о пивоварне и её сортах</p>
+        </hgroup>
+
+        <article class="card" style="margin-top: 20px;">
+            <header style="margin-bottom: 15px;">
+                <h2 th:text="${breweryDetails.name}"
+                    style="font-size: 26px; margin: 0 0 10px;"></h2>
+                <p style="margin: 0; color: #b3b3b3;">
+                    Локация:
+                    <strong th:text="${breweryDetails.location}"></strong>
+                </p>
+            </header>
+
+            <section style="margin-top: 15px;">
+                <h3 style="margin-top: 0; color: #d4a048;">Описание</h3>
+                <p th:text="${breweryDetails.description}"></p>
+            </section>
+
+            <section style="margin-top: 25px;">
+                <h3 style="color: #8ab4ff; margin-bottom: 10px;">Сорта пива пивоварни</h3>
+
+                <p th:if="${breweryDetails.beers == null or #lists.isEmpty(breweryDetails.beers)}">
+                    <em>У этой пивоварни пока нет добавленных сортов в энциклопедии.</em>
+                </p>
+
+                <div th:if="${breweryDetails.beers != null and !#lists.isEmpty(breweryDetails.beers)}"
+                     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px;">
+                    <article class="card" th:each="beer : ${breweryDetails.beers}">
+                        <h4 th:text="${beer.name}" style="margin-top: 0;"></h4>
+                        <!-- вместо #strings.abbreviate(beer.description, 120) -->
+                        <p th:text="${beer.description}"></p>
+                        <a th:href="@{/beers/{id}(id=${beer.id})}"
+                           style="font-size: 14px; font-weight: 600;">
+                            Подробнее о сорте →
+                        </a>
+                    </article>
+                </div>
+            </section>
+
+            <footer style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="/breweries/all"
+                   style="padding: 8px 16px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    ← Назад к списку пивоварен
+                </a>
+
+                <sec:authorize access="hasRole('ADMIN')">
+                    <a th:href="@{/breweries/delete/{id}(id=${breweryDetails.id})}"
+                       onclick="return confirm('Удалить эту пивоварню?')"
+                       style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
+                        Удалить пивоварню
+                    </a>
+                </sec:authorize>
+            </footer>
+        </article>
+    </section>
 </main>
-<footer th:replace="fragments/footer"></footer>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

@@ -1,60 +1,89 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head"/>
+
+<head th:replace="fragments/head :: head('Beer Wiki — Каталог пива')"></head>
+
 <body>
-<div th:replace="fragments/navbar"></div>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <main class="container">
     <hgroup>
-        <h1>Все пиво</h1>
-        <p>Просмотр и поиск пива</p>
+        <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Все сорта пива</h1>
+        <p style="margin-top: 0;">Просмотр и поиск сортов в энциклопедии</p>
     </hgroup>
 
     <!-- Сообщение об успехе -->
-    <div th:if="${successMessage}" style="padding: 1rem; margin-bottom: 1rem; background-color: var(--pico-ins-color); border-radius: var(--pico-border-radius);">
-        <p th:text="${successMessage}" style="margin: 0; color: white;"></p>
+    <div th:if="${successMessage}"
+         style="padding: 0.8rem 1rem; margin-bottom: 1rem; background-color: #235b2f; border-radius: 8px;">
+        <p th:text="${successMessage}" style="margin: 0; color: #e6e3df;"></p>
     </div>
 
     <!-- Форма поиска -->
-    <form method="get" action="/beers/all">
-        <div class="grid">
+    <form method="get" action="/beers/all-beers" style="margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px;">
             <input type="search"
                    name="search"
                    th:value="${search}"
-                   placeholder="Поиск по названию или описанию..."
-                   aria-label="Поиск">
-            <button type="submit">Найти</button>
+                   placeholder="Поиск по названию..."
+                   aria-label="Поиск"
+                   style="padding: 8px 10px; border-radius: 6px; border: 1px solid #3c3c3c; background: #141414; color: #e6e3df;">
+            <button type="submit"
+                    style="background: #d4a048; color: #1b1b1b; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 600;">
+                Найти
+            </button>
         </div>
     </form>
 
     <!-- Список пива -->
-    <div th:each="c : ${beerInfos}" class="card">
-        <h3 th:text="${c.name}"></h3>
-        <p><strong>Город:</strong> <span th:text="${c.town}"></span></p>
-        <p><strong>Описание:</strong> <span th:text="${#strings.abbreviate(c.description, 100)}"></span></p>
-        <a th:href="@{/companies/company-details/{company-name}(company-name=${c.name})}" role="button" class="outline">
-            Подробнее
-        </a>
-    </div>
+    <section th:if="${beers != null and !#lists.isEmpty(beers)}"
+             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+        <article class="card" th:each="beer : ${beers}">
+            <h3 th:text="${beer.name}" style="margin-top: 0;"></h3>
+            <p style="margin: 4px 0;">
+                <strong>Пивоварня:</strong>
+                <span th:text="${beer.breweryName}"></span>
+            </p>
+            <p style="margin: 4px 0 10px;">
+                <strong>Описание:</strong>
+                <span th:text="${#strings.abbreviate(beer.description, 120)}"></span>
+            </p>
+            <a th:href="@{/beers/{name}(name=${beer.name})}"
+               style="font-weight: 600; font-size: 14px;">
+                Подробнее →
+            </a>
+        </article>
+    </section>
+
+    <p th:if="${beers == null or #lists.isEmpty(beers)}">
+        <em>Пиво не найдено. Попробуйте изменить критерии поиска или добавьте новый сорт.</em>
+    </p>
 
     <!-- Пагинация -->
-    <nav th:if="${totalPages != null && totalPages > 1}" aria-label="Pagination">
-        <ul style="display: flex; justify-content: center; list-style: none; padding: 0;">
+    <nav th:if="${totalPages != null and totalPages > 1}" aria-label="Pagination" style="margin-top: 25px;">
+        <ul style="display: flex; justify-content: center; list-style: none; padding: 0; gap: 10px; align-items: center;">
             <li th:if="${currentPage > 0}">
-                <a th:href="@{/beers/all(page=${currentPage - 1}, size=10)}" role="button" class="outline">Назад</a>
+                <a th:href="@{/beers/all-beers(page=${currentPage - 1}, size=10)}"
+                   style="padding: 6px 14px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    ← Назад
+                </a>
             </li>
-            <li style="margin: 0 1rem; align-self: center;">
-                <span>Страница <strong th:text="${currentPage + 1}"></strong> из <strong th:text="${totalPages}"></strong></span>
+            <li>
+                <span>Страница
+                    <strong th:text="${currentPage + 1}"></strong>
+                    из
+                    <strong th:text="${totalPages}"></strong>
+                </span>
             </li>
             <li th:if="${currentPage + 1 < totalPages}">
-                <a th:href="@{/beers/all(page=${currentPage + 1}, size=10)}" role="button" class="outline">Вперед</a>
+                <a th:href="@{/beers/all-beers(page=${currentPage + 1}, size=10)}"
+                   style="padding: 6px 14px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    Вперёд →
+                </a>
             </li>
         </ul>
     </nav>
-
-    <p th:if="${#lists.isEmpty(beerInfos)}" class="text-center">
-        <em>Пиво не найдено. Попробуйте изменить критерии поиска или добавьте новое пиво!</em>
-    </p>
 </main>
-<footer th:replace="fragments/footer"></footer>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

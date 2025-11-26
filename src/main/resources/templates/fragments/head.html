@@ -1,39 +1,50 @@
-<head th:fragment="head" xmlns:th="http://www.thymeleaf.org">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Система управления компаниями</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    body {
-      padding: 0;
-    }
-    nav {
-      padding: 1rem 0;
-    }
-    main {
-      padding: 2rem 0;
-      min-height: 70vh;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem 0;
-      text-align: center;
-      border-top: 1px solid var(--pico-muted-border-color);
-    }
-    .card {
-      margin-bottom: 1rem;
-      padding: 1.5rem;
-      border: 1px solid var(--pico-muted-border-color);
-      border-radius: var(--pico-border-radius);
-    }
-    .text-center {
-      text-align: center;
-    }
-    .text-danger {
-      color: var(--pico-del-color);
-    }
-    .text-success {
-      color: var(--pico-ins-color);
-    }
-  </style>
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Beer Wiki</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Стили -->
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: #1b1b1b;
+            color: #e6e3df;
+        }
+
+        a {
+            text-decoration: none;
+            color: #d4a048;
+        }
+
+        a:hover {
+            color: #f1c97b;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Общий стиль для карточек */
+        .card {
+            background: #262626;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #3c3c3c;
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            border-color: #d4a048;
+        }
+
+    </style>
 </head>
+</html>

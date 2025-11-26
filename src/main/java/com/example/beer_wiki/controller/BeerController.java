@@ -1,6 +1,5 @@
 package com.example.beer_wiki.controller;
 
-
 import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.service.BeerService;
 import org.springframework.data.domain.Page;
@@ -17,15 +16,39 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/beers")
 public class BeerController {
 
-    private BeerService beerService;
+    private final BeerService beerService;
 
     public BeerController(BeerService beerService) {
         this.beerService = beerService;
     }
 
     @GetMapping("/add")
-    public String addBeer(){
+    public String addBeer(Model model) {
+        if (!model.containsAttribute("beerModel")) {
+            model.addAttribute("beerModel", new BeerDetailsDto());
+        }
         return "beer-add";
+    }
+
+    @PostMapping("/add")
+    public String createBeer(@ModelAttribute("beerModel") BeerDetailsDto beerModel,
+                             BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("beerModel", beerModel);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.beerModel",
+                    bindingResult
+            );
+            return "redirect:/beers/add";
+        }
+
+        beerService.save(beerModel);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Пиво '" + beerModel.getName() + "' успешно добавлено!");
+
+        return "redirect:/beers/all-beers";
     }
 
     @GetMapping("/all-beers")
@@ -37,52 +60,32 @@ public class BeerController {
             Model model) {
 
         if (search != null && !search.trim().isEmpty()) {
-            model.addAttribute("companyInfos", beerService.searchByName(search));
+            model.addAttribute("beers", beerService.searchByName(search));
             model.addAttribute("search", search);
         } else {
-//            Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
-////            Page<ShowCompanyInfoDto> companyPage = beerService.allCompaniesPaginated(pageable);
-//
-//            model.addAttribute("companyInfos", companyPage.getContent());
-//            model.addAttribute("currentPage", page);
-//            model.addAttribute("totalPages", companyPage.getTotalPages());
-//            model.addAttribute("totalItems", companyPage.getTotalElements());
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+            Page<BeerDetailsDto> beerPage = beerService.findAllPaginated(pageable);
+
+            model.addAttribute("beers", beerPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", beerPage.getTotalPages());
+            model.addAttribute("totalItems", beerPage.getTotalElements());
         }
 
         return "beer-all";
     }
 
-    @PostMapping("/add")
-    public String addBeer(BeerDetailsDto beerModel,
-                             BindingResult bindingResult,
-                             RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("beerModel", beerModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.companyModel",
-                    bindingResult);
-            return "redirect:/beers/add";
-        }
-
-        beerService.save(beerModel);
-        redirectAttributes.addFlashAttribute("successMessage",
-                "Пиво '" + beerModel.getName() + "' успешно добавлено!");
-
-        return "redirect:/companies/all";
-    }
-
-
     @GetMapping("/{name}")
-    public String beerDetails(@PathVariable("name") String name, Model model){
+    public String beerDetails(@PathVariable String name, Model model) {
         model.addAttribute("beerDetails", beerService.beerDetails(name));
         return "beer-details";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteBeer(@PathVariable("id")Long id, RedirectAttributes redirectAttributes) {
+    public String deleteBeer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         beerService.deleteById(id);
         redirectAttributes.addFlashAttribute("successMessage",
-                "Пиво '" + id + "' успешно удалено!");
-        return "redirect:/beers/all";
+                "Пиво с ID " + id + " успешно удалено!");
+        return "redirect:/beers/all-beers";
     }
 }

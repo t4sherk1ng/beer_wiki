@@ -3,13 +3,19 @@ package com.example.beer_wiki.service.implementation;
 import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.dto.BeerListDto;
 import com.example.beer_wiki.model.Beer;
+import com.example.beer_wiki.model.Brewery;
 import com.example.beer_wiki.repository.BeerRepository;
+import com.example.beer_wiki.repository.BreweryRepository;
 import com.example.beer_wiki.service.BeerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,12 +23,23 @@ import java.util.stream.Collectors;
 public class BeerServiceImpl implements BeerService {
 
     private final BeerRepository repository;
+    private final BreweryRepository breweryRepository; // добавляем
+
     @Autowired
     private ModelMapper modelMapper;
 
-    public BeerServiceImpl(BeerRepository repository) {
+    public BeerServiceImpl(BeerRepository repository,
+                           BreweryRepository breweryRepository) {
         this.repository = repository;
+        this.breweryRepository = breweryRepository;
     }
+
+    @Override
+    public Page<BeerDetailsDto> findAllPaginated(Pageable pageable) {
+        Page<Beer> page = repository.findAll(pageable);
+        return page.map(beer -> modelMapper.map(beer, BeerDetailsDto.class));
+    }
+
 
     @Override
     public List<BeerListDto> findAll() {
@@ -113,6 +130,26 @@ public class BeerServiceImpl implements BeerService {
     }
 
     private Beer convertToEntity(BeerDetailsDto dto) {
-        return modelMapper.map(dto, Beer.class);
+        Beer beer = new Beer();
+
+        beer.setId(dto.getId());
+        beer.setName(dto.getName());
+        beer.setDescription(dto.getDescription());
+        beer.setAbv(dto.getAbv());
+        beer.setIbu(dto.getIbu());
+        beer.setIngredients(dto.getIngredients() != null ? dto.getIngredients() : new ArrayList<>());
+
+        if (dto.getBreweryName() != null && !dto.getBreweryName().isBlank()) {
+            Brewery brewery = breweryRepository.findByName(dto.getBreweryName())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Пивоварня с именем '" + dto.getBreweryName() + "' не найдена. " +
+                            "Сначала добавьте пивоварню."));
+            beer.setBrewery(brewery);
+        } else {
+            throw new RuntimeException("Название пивоварни обязательно для заполнения.");
+        }
+        return beer;
     }
+
+
 }

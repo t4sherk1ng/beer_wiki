@@ -1,38 +1,92 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head :: head('Beer Wiki — Добавить пиво')"></head>
+
 <body>
-<div th:replace="fragments/navbar"></div>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <main class="container">
-    <article style="max-width: 600px; margin: 0 auto;">
+    <article style="max-width: 650px; margin: 0 auto;">
         <hgroup>
-            <h1>Добавление пива</h1>
-            <p>Заполните информацию о пиве ниже</p>
+            <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Добавление пива</h1>
+            <p style="margin-top: 0;">Заполните информацию о сорте ниже</p>
         </hgroup>
+
         <form th:action="@{/beers/add}"
               th:method="post"
-              th:object="${beerModel}">
+              th:object="${beerModel}"
+              style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+
             <label for="name">
                 Название пива
                 <input th:field="*{name}"
                        th:errorclass="is-invalid"
                        type="text"
                        id="name"
-                       placeholder="Введите название пива"
+                       placeholder="Например, Punk IPA"
                        required/>
-                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}"
+                       style="color: #e57373;"></small>
             </label>
 
-            <label for="brewery">
+            <label for="breweryName">
                 Пивоварня
-                <input th:field="*{brewery}"
+                <input th:field="*{breweryName}"
                        th:errorclass="is-invalid"
                        type="text"
-                       id="town"
-                       placeholder="Введите пивоварню"
+                       id="breweryName"
+                       placeholder="Например, BrewDog"
                        required/>
-                <small th:if="${#fields.hasErrors('brewery')}" th:errors="*{brewery}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('breweryName')}"
+                       th:errors="*{breweryName}"
+                       style="color: #e57373;"></small>
             </label>
+
+            <label for="styleName">
+                Стиль
+                <input th:field="*{styleName}"
+                       th:errorclass="is-invalid"
+                       type="text"
+                       id="styleName"
+                       placeholder="Например, IPA, Stout, Lager"
+                       required/>
+                <small th:if="${#fields.hasErrors('styleName')}"
+                       th:errors="*{styleName}"
+                       style="color: #e57373;"></small>
+            </label>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;">
+                <label for="abv">
+                    ABV (%)
+                    <input th:field="*{abv}"
+                           th:errorclass="is-invalid"
+                           type="number"
+                           step="0.1"
+                           min="0"
+                           max="20"
+                           id="abv"
+                           placeholder="Напр. 5.6"
+                           required/>
+                    <small th:if="${#fields.hasErrors('abv')}"
+                           th:errors="*{abv}"
+                           style="color: #e57373;"></small>
+                </label>
+
+                <label for="ibu">
+                    IBU (горечь)
+                    <input th:field="*{ibu}"
+                           th:errorclass="is-invalid"
+                           type="number"
+                           min="0"
+                           max="120"
+                           id="ibu"
+                           placeholder="Напр. 45"/>
+                    <small th:if="${#fields.hasErrors('ibu')}"
+                           th:errors="*{ibu}"
+                           style="color: #e57373;"></small>
+                </label>
+            </div>
 
             <label for="description">
                 Описание
@@ -40,15 +94,42 @@
                           th:errorclass="is-invalid"
                           id="description"
                           rows="4"
-                          placeholder="Опишите пиво..."
+                          placeholder="Кратко опишите стиль, аромат, вкус и послевкусие..."
                           required></textarea>
-                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('description')}"
+                       th:errors="*{description}"
+                       style="color: #e57373;"></small>
             </label>
 
-            <button type="submit">Добавить пиво</button>
+            <label for="ingredients">
+                Ингредиенты (по одному на строку)
+                <textarea th:field="*{ingredients}"
+                          th:errorclass="is-invalid"
+                          id="ingredients"
+                          rows="3"
+                          placeholder="Солод
+Хмель
+Дрожжи
+Вода"></textarea>
+                <small th:if="${#fields.hasErrors('ingredients')}"
+                       th:errors="*{ingredients}"
+                       style="color: #e57373;"></small>
+            </label>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit"
+                        style="background: #d4a048; color: #1b1b1b; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                    Добавить пиво
+                </button>
+                <a href="/beers/all-beers"
+                   style="padding: 10px 20px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    Отмена
+                </a>
+            </div>
         </form>
     </article>
 </main>
-<footer th:replace="fragments/footer"></footer>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

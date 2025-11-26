@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head :: head('Beer Wiki — Добавить пивоварню')"></head>
+
 <body>
-<div th:replace="fragments/navbar"></div>
+<nav th:replace="fragments/navbar :: navbar"></nav>
+
 <main class="container">
-    <article style="max-width: 600px; margin: 0 auto;">
+    <article style="max-width: 650px; margin: 0 auto;">
         <hgroup>
-            <h1>Добавление пивоварни</h1>
-            <p>Заполните информацию о пиоварне ниже</p>
+            <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Добавление пивоварни</h1>
+            <p style="margin-top: 0;">Заполните информацию о пивоварне ниже</p>
         </hgroup>
+
         <form th:action="@{/breweries/add}"
               th:method="post"
-              th:object="${breweryModel}">
-            <label for="brewery">
+              th:object="${breweryModel}"
+              style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+
+            <label for="name">
                 Название пивоварни
                 <input th:field="*{name}"
                        th:errorclass="is-invalid"
                        type="text"
                        id="name"
-                       placeholder="Введите название пивоварни"
+                       placeholder="Например, Northern Hops Brewery"
                        required/>
-                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('name')}"
+                       th:errors="*{name}"
+                       style="color: #e57373;"></small>
+            </label>
+
+            <label for="location">
+                Локация
+                <input th:field="*{location}"
+                       th:errorclass="is-invalid"
+                       type="text"
+                       id="location"
+                       placeholder="Город, страна"
+                       required/>
+                <small th:if="${#fields.hasErrors('location')}"
+                       th:errors="*{location}"
+                       style="color: #e57373;"></small>
             </label>
 
             <label for="description">
@@ -29,26 +49,27 @@
                           th:errorclass="is-invalid"
                           id="description"
                           rows="4"
-                          placeholder="Опишите пиво..."
+                          placeholder="Расскажите об истории, стиле, философии пивоварни..."
                           required></textarea>
-                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('description')}"
+                       th:errors="*{description}"
+                       style="color: #e57373;"></small>
             </label>
 
-            <label for="location">
-                Описание
-                <textarea th:field="*{description}"
-                          th:errorclass="is-invalid"
-                          id="location"
-                          rows="4"
-                          placeholder="Опишите пивоварню..."
-                          required></textarea>
-                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></small>
-            </label>
-
-            <button type="submit">Добавить пивоварню</button>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit"
+                        style="background: #8ab4ff; color: #0b0b0b; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+                    Добавить пивоварню
+                </button>
+                <a href="/breweries/all"
+                   style="padding: 10px 20px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    Отмена
+                </a>
+            </div>
         </form>
     </article>
 </main>
-<footer th:replace="fragments/footer"></footer>
+
+<footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>

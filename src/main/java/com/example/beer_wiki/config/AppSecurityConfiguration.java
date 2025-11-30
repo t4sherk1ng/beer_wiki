@@ -61,7 +61,6 @@ public class AppSecurityConfiguration {
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
                         .requestMatchers("/actuator/**").authenticated()
                         .requestMatchers("/beers/all-beers", "/breweries/all", "/beers/{id}", "/breweries/{id}").permitAll()
-//                        .requestMatchers("/beers/add", "/beers/delete/**", "/breweries/add", "/breweries/delete/**").authenticated()
                         .requestMatchers("/users/profile").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -71,7 +70,7 @@ public class AppSecurityConfiguration {
                         .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                         .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                         .defaultSuccessUrl("/", true)
-                        .failureForwardUrl("/error")
+                        .failureForwardUrl("/users/login-error")   // ← сюда
                         .permitAll()
                 )
                 .rememberMe(remember -> remember

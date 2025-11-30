@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   app:
     build:
@@ -17,14 +15,14 @@ services:
       - mynetwork
 
   db:
-    image: postgres:latest
+    image: postgres:16
     container_name: beer_wiki_db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: 4ekhl1DpLe
       POSTGRES_DB: beer_service
     ports:
-      - "5432:5432"          # можно убрать, если БД не нужна снаружи
+      - "5432:5432"
     networks:
       - mynetwork
     volumes:

@@ -1,68 +1,210 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="fragments/head :: head('Beer Wiki — Добавить пивоварню')"></head>
+<style>
+    .form-wrapper {
+        max-width: 650px;
+        margin: 3rem auto;
+        padding: 2.2rem 2.4rem;
+        border-radius: 12px;
+        background: rgba(20, 20, 20, 0.92);
+        border: 1px solid #3c3c3c;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+        color: #e6e3df;
+    }
+
+    .form-title {
+        font-family: 'Cinzel', serif;
+        font-size: 28px;
+        margin: 0 0 0.4rem;
+        color: #d4a048;
+    }
+
+    .form-subtitle {
+        margin: 0 0 1.6rem;
+        font-size: 0.95rem;
+        color: #b3b3b3;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #e6e3df;
+    }
+
+    .form-input,
+    .form-textarea {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        border-radius: 6px;
+        border: 1px solid #3c3c3c;
+        background: rgba(10, 10, 10, 0.9);
+        color: #e6e3df;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+        color: #7d7d7d;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: #8ab4ff;
+        box-shadow: 0 0 0 0.14rem rgba(138, 180, 255, 0.35);
+        background: rgba(15, 15, 15, 0.98);
+    }
+
+    .form-textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .btn-primary {
+        display: inline-block;
+        padding: 0.7rem 1.6rem;
+        border-radius: 6px;
+        border: none;
+        background: linear-gradient(135deg, #8ab4ff, #d4a048);
+        color: #1b1b1b;
+        font-weight: 700;
+        font-size: 0.96rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.06s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn-primary:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-primary:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-secondary {
+        padding: 0.7rem 1.6rem;
+        border-radius: 6px;
+        border: 1px solid #3c3c3c;
+        background: transparent;
+        color: #e6e3df;
+        font-weight: 500;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(60, 60, 60, 0.6);
+        border-color: #555;
+    }
+
+    .error-text {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+        .form-wrapper {
+            margin: 2rem 1rem;
+            padding: 1.6rem 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 
 <body>
 <nav th:replace="fragments/navbar :: navbar"></nav>
 
 <main class="container">
-    <article style="max-width: 650px; margin: 0 auto;">
-        <hgroup>
-            <h1 style="font-family: 'Cinzel', serif; margin-bottom: 0.3rem;">Добавление пивоварни</h1>
-            <p style="margin-top: 0;">Заполните информацию о пивоварне ниже</p>
-        </hgroup>
+    <article class="form-wrapper">
+        <h1 class="form-title">Добавление пивоварни</h1>
+        <p class="form-subtitle">Заполните информацию о пивоварне ниже</p>
 
         <form th:action="@{/breweries/add}"
               th:method="post"
-              th:object="${breweryModel}"
-              style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+              th:object="${breweryModel}">
 
-            <label for="name">
-                Название пивоварни
+            <div class="form-group">
+                <label for="name" class="form-label">
+                    Название пивоварни
+                </label>
                 <input th:field="*{name}"
                        th:errorclass="is-invalid"
                        type="text"
                        id="name"
+                       class="form-input"
                        placeholder="Например, Northern Hops Brewery"
                        required/>
                 <small th:if="${#fields.hasErrors('name')}"
                        th:errors="*{name}"
-                       style="color: #e57373;"></small>
-            </label>
+                       class="error-text"></small>
+            </div>
 
-            <label for="location">
-                Локация
+            <div class="form-group">
+                <label for="location" class="form-label">
+                    Локация
+                </label>
                 <input th:field="*{location}"
                        th:errorclass="is-invalid"
                        type="text"
                        id="location"
+                       class="form-input"
                        placeholder="Город, страна"
                        required/>
                 <small th:if="${#fields.hasErrors('location')}"
                        th:errors="*{location}"
-                       style="color: #e57373;"></small>
-            </label>
+                       class="error-text"></small>
+            </div>
 
-            <label for="description">
-                Описание
+            <div class="form-group">
+                <label for="description" class="form-label">
+                    Описание
+                </label>
                 <textarea th:field="*{description}"
                           th:errorclass="is-invalid"
                           id="description"
+                          class="form-textarea"
                           rows="4"
                           placeholder="Расскажите об истории, стиле, философии пивоварни..."
                           required></textarea>
                 <small th:if="${#fields.hasErrors('description')}"
                        th:errors="*{description}"
-                       style="color: #e57373;"></small>
-            </label>
+                       class="error-text"></small>
+            </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button type="submit"
-                        style="background: #8ab4ff; color: #0b0b0b; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600;">
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
                     Добавить пивоварню
                 </button>
-                <a href="/breweries/all"
-                   style="padding: 10px 20px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                <a href="/breweries/all" class="btn-secondary">
                     Отмена
                 </a>
             </div>

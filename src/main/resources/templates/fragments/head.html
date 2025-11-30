@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:fragment="head">
-    <!-- ... существующие meta, title, стили, шрифты ... -->
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title th:text="${title} ?: 'Beer Wiki'">Beer Wiki</title>
     <style>
         html, body {
             height: 100%;

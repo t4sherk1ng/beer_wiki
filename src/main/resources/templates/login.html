@@ -1,14 +1,32 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
 <style>
-    .auth-card {
-        max-width: 480px;
-        margin: 2rem auto;
-        padding: 2rem 2.5rem;
+    .auth-wrapper {
+        max-width: 460px;
+        margin: 3rem auto;
+        padding: 2.2rem 2.4rem;
         border-radius: 12px;
-        background: #ffffff;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        background: rgba(20, 20, 20, 0.92);
+        border: 1px solid #3c3c3c;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+        color: #e6e3df;
+    }
+
+    .auth-title {
+        font-family: 'Cinzel', serif;
+        font-size: 28px;
+        margin: 0 0 0.4rem;
+        color: #d4a048;
+        text-align: center;
+    }
+
+    .auth-subtitle {
+        margin: 0 0 1.6rem;
+        font-size: 0.95rem;
+        text-align: center;
+        color: #b3b3b3;
     }
 
     .form-group {
@@ -18,24 +36,31 @@
     .form-label {
         display: block;
         font-weight: 600;
-        margin-bottom: 0.4rem;
-        color: #333;
+        margin-bottom: 0.35rem;
+        color: #e6e3df;
     }
 
     .form-input {
         width: 100%;
         padding: 0.6rem 0.8rem;
         border-radius: 6px;
-        border: 1px solid #ced4da;
+        border: 1px solid #3c3c3c;
+        background: rgba(10, 10, 10, 0.9);
+        color: #e6e3df;
         font-size: 0.95rem;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
         box-sizing: border-box;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .form-input::placeholder {
+        color: #7d7d7d;
     }
 
     .form-input:focus {
         outline: none;
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.15rem rgba(13,110,253,0.25);
+        border-color: #d4a048;
+        box-shadow: 0 0 0 0.14rem rgba(212, 160, 72, 0.35);
+        background: rgba(15, 15, 15, 0.98);
     }
 
     .form-remember {
@@ -44,45 +69,51 @@
         gap: 0.4rem;
         margin-bottom: 1rem;
         font-size: 0.9rem;
+        color: #c0c0c0;
     }
 
     .btn-primary {
         display: inline-block;
         width: 100%;
-        padding: 0.65rem 1rem;
+        padding: 0.7rem 1rem;
         border-radius: 6px;
         border: none;
-        background: #0d6efd;
-        color: #fff;
-        font-weight: 600;
-        font-size: 0.95rem;
+        background: linear-gradient(135deg, #d4a048, #f1c97b);
+        color: #1b1b1b;
+        font-weight: 700;
+        font-size: 0.96rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
         cursor: pointer;
-        transition: background 0.15s ease, transform 0.05s ease;
+        transition: transform 0.06s ease, box-shadow 0.12s ease, filter 0.12s ease;
     }
 
     .btn-primary:hover {
-        background: #0b5ed7;
+        filter: brightness(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
     }
 
     .btn-primary:active {
         transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
     }
 
     .error-text {
-        color: #dc3545;
+        color: #ff6b6b;
         margin-bottom: 0.8rem;
         font-size: 0.9rem;
+        text-align: center;
     }
 
     .auth-footer-text {
         margin-top: 0.9rem;
         font-size: 0.9rem;
         text-align: center;
-        color: #555;
+        color: #b3b3b3;
     }
 
     .auth-footer-text a {
-        color: #0d6efd;
+        color: #8ab4ff;
         text-decoration: none;
         font-weight: 600;
     }
@@ -94,11 +125,10 @@
 <body>
 <div th:replace="fragments/navbar"></div>
 <main class="container">
-    <article class="auth-card">
-        <hgroup>
-            <h1>Вход</h1>
-            <p>Введите свои данные для доступа к системе</p>
-        </hgroup>
+    <article class="auth-wrapper">
+        <h1 class="auth-title">Вход</h1>
+        <p class="auth-subtitle">Введите свои данные, чтобы продолжить путешествие по миру крафтового пива</p>
+
         <form th:action="@{/users/login}" th:method="post">
             <div class="form-group">
                 <label for="username" class="form-label">
@@ -131,7 +161,7 @@
             </label>
 
             <p class="error-text" th:if="${badCredentials}">
-                <mark>Неверный логин или пароль.</mark>
+                Неверный логин или пароль.
             </p>
 
             <button type="submit" class="btn-primary">Войти</button>

@@ -1,46 +1,164 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head"></head>
+<style>
+    .auth-wrapper {
+        max-width: 480px;
+        margin: 3rem auto;
+        padding: 2.2rem 2.4rem;
+        border-radius: 12px;
+        background: rgba(20, 20, 20, 0.92);
+        border: 1px solid #3c3c3c;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+        color: #e6e3df;
+    }
+
+    .auth-title {
+        font-family: 'Cinzel', serif;
+        font-size: 28px;
+        margin: 0 0 0.4rem;
+        color: #d4a048;
+        text-align: center;
+    }
+
+    .auth-subtitle {
+        margin: 0 0 1.6rem;
+        font-size: 0.95rem;
+        text-align: center;
+        color: #b3b3b3;
+    }
+
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+
+    .form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+        color: #e6e3df;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.6rem 0.8rem;
+        border-radius: 6px;
+        border: 1px solid #3c3c3c;
+        background: rgba(10, 10, 10, 0.9);
+        color: #e6e3df;
+        font-size: 0.95rem;
+        box-sizing: border-box;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .form-input::placeholder {
+        color: #7d7d7d;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #8ab4ff;
+        box-shadow: 0 0 0 0.14rem rgba(138, 180, 255, 0.35);
+        background: rgba(15, 15, 15, 0.98);
+    }
+
+    .btn-primary {
+        display: inline-block;
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border-radius: 6px;
+        border: none;
+        background: linear-gradient(135deg, #8ab4ff, #d4a048);
+        color: #1b1b1b;
+        font-weight: 700;
+        font-size: 0.96rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.06s ease, box-shadow 0.12s ease, filter 0.12s ease;
+    }
+
+    .btn-primary:hover {
+        filter: brightness(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .btn-primary:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+    }
+
+    .error-text {
+        color: #ff6b6b;
+        margin-top: 0.3rem;
+        font-size: 0.85rem;
+        display: block;
+    }
+
+    .auth-footer-text {
+        margin-top: 0.9rem;
+        font-size: 0.9rem;
+        text-align: center;
+        color: #b3b3b3;
+    }
+
+    .auth-footer-text a {
+        color: #8ab4ff;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .auth-footer-text a:hover {
+        text-decoration: underline;
+    }
+</style>
 <body>
 <div th:replace="fragments/navbar"></div>
 <main class="container">
-    <article style="max-width: 600px; margin: 0 auto;">
-        <hgroup>
-            <h1>Регистрация</h1>
-            <p>Создайте новую учетную запись для доступа к системе</p>
-        </hgroup>
+    <article class="auth-wrapper">
+        <h1 class="auth-title">Регистрация</h1>
+        <p class="auth-subtitle">Создайте новую учётную запись, чтобы сохранять любимые сорта и пивоварни</p>
+
         <form th:action="@{/users/register}"
               th:method="post"
               th:object="${userRegistrationDto}">
 
             <!-- Логин -->
-            <label for="username">
-                Логин
+            <div class="form-group">
+                <label for="username" class="form-label">
+                    Логин
+                </label>
                 <input th:field="*{username}"
                        th:errorclass="is-invalid"
                        type="text"
                        id="username"
+                       class="form-input"
                        placeholder="Выберите логин"
                        required/>
                 <small th:if="${#fields.hasErrors('username')}"
                        th:errors="*{username}"
-                       class="text-danger"></small>
-            </label>
+                       class="error-text"></small>
+            </div>
 
             <!-- Электронная почта -->
-            <label for="email">
-                Электронная почта
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    Электронная почта
+                </label>
                 <input th:field="*{email}"
                        th:errorclass="is-invalid"
                        type="email"
                        id="email"
+                       class="form-input"
                        placeholder="ваш.email@example.com"
                        required/>
-            </label>
+            </div>
 
-            <!-- Пароль (привязан к rawPassword в UserDto) -->
-            <label for="password">
-                Пароль
+            <!-- Пароль (rawPassword в UserDto) -->
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    Пароль
+                </label>
                 <input th:field="*{rawPassword}"
                        required
                        minlength="5"
@@ -48,24 +166,32 @@
                        th:errorclass="is-invalid"
                        type="password"
                        id="password"
+                       class="form-input"
                        placeholder="Придумайте пароль"/>
-            </label>
+            </div>
 
-            <!-- Повтор пароля — просто обычное поле без биндинга к DTO,
-                 чтобы не ломать валидацию на стороне сервера -->
-            <label for="confirmPassword">
-                Подтвердите пароль
+            <!-- Повтор пароля (клиентский контроль) -->
+            <div class="form-group">
+                <label for="confirmPassword" class="form-label">
+                    Подтвердите пароль
+                </label>
                 <input
-                       required
-                       minlength="5"
-                       maxlength="20"
-                       type="password"
-                       id="confirmPassword"
-                       name="confirmPassword"
-                       placeholder="Повторите пароль"/>
-            </label>
+                        required
+                        minlength="5"
+                        maxlength="20"
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        class="form-input"
+                        placeholder="Повторите пароль"/>
+            </div>
 
-            <button type="submit">Зарегистрироваться</button>
+            <button type="submit" class="btn-primary">Зарегистрироваться</button>
+
+            <p class="auth-footer-text">
+                Уже есть аккаунт?
+                <a th:href="@{/users/login}">Войдите</a>
+            </p>
         </form>
     </article>
 </main>

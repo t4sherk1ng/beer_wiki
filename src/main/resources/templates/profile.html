@@ -1,35 +1,168 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/head"/>
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<style>
+    .profile-wrapper {
+        max-width: 720px;
+        margin: 3rem auto;
+        padding: 2.2rem 2.6rem;
+        border-radius: 14px;
+        background: rgba(20, 20, 20, 0.92);
+        border: 1px solid #3c3c3c;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+        color: #e6e3df;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 1.7rem;
+    }
+
+    .profile-title {
+        font-family: 'Cinzel', serif;
+        font-size: 28px;
+        margin: 0;
+        color: #d4a048;
+    }
+
+    .profile-subtitle {
+        margin: 0.2rem 0 0;
+        font-size: 0.95rem;
+        color: #b3b3b3;
+    }
+
+    .profile-chip {
+        padding: 0.45rem 0.9rem;
+        border-radius: 999px;
+        border: 1px solid #8ab4ff;
+        color: #8ab4ff;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 0.03em;
+    }
+
+    .profile-section-title {
+        font-size: 1.05rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #7f7f7f;
+        margin: 1.6rem 0 0.6rem;
+    }
+
+    .profile-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #2c2c2c;
+        font-size: 0.96rem;
+    }
+
+    .profile-label {
+        color: #9f9f9f;
+    }
+
+    .profile-value {
+        color: #e6e3df;
+        font-weight: 500;
+    }
+
+    .profile-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .badge-role {
+        padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid #d4a048;
+        font-size: 0.8rem;
+        color: #d4a048;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 640px) {
+        .profile-wrapper {
+            margin: 2rem 1rem;
+            padding: 1.6rem 1.5rem;
+        }
+
+        .profile-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
 <body>
 <div th:replace="fragments/navbar"></div>
+
 <main class="container">
-  <hgroup>
-    <h1>Профиль пользователя</h1>
-    <p>Информация о вашей учетной записи</p>
-  </hgroup>
-  <article class="card">
-    <div class="grid">
-      <div th:object="${user}">
-        <p><strong>Логин:</strong> <span th:text="*{username}"></span></p>
-        <p><strong>Email:</strong> <span th:text="*{email}"></span></p>
-        <div th:each="c : ${beerReviews}" class="card">
-          <h3 th:text="${c.name}"></h3>
-          <p><strong>Пиво:</strong> <span th:text="${c.beer}"></span></p>
-          <p><strong>Оценка:</strong> <span th:text="${#strings.abbreviate(c.rating, 100)}"></span></p>
-          <p><strong>Обзор:</strong> <span th:text="${#strings.abbreviate(c.comment, 100)}"></span></p>
-        </div>
-        <div>
-          <strong>Роли:</strong>
-          <div sec:authentication="principal.authorities" style="margin-top: 0.5rem;"></div>
-        </div>
-      </div>
-      <div class="text-center">
-        <img src="/pic/employee.png" alt="Профиль пользователя" style="width: 100%; max-width: 300px; border-radius: var(--pico-border-radius);">
-      </div>
-    </div>
-  </article>
+    <article class="profile-wrapper" th:if="${user != null}">
+        <header class="profile-header">
+            <div>
+                <h1 class="profile-title">Профиль</h1>
+                <p class="profile-subtitle">
+                    Добро пожаловать,
+                    <span th:text="${user.username}">username</span>!
+                </p>
+            </div>
+            <div class="profile-chip">
+                <span th:text="${user.username}">username</span>
+            </div>
+        </header>
+
+        <section>
+            <h2 class="profile-section-title">Основная информация</h2>
+
+            <div class="profile-row">
+                <span class="profile-label">Логин</span>
+                <span class="profile-value" th:text="${user.username}">username</span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Электронная почта</span>
+                <span class="profile-value"
+                      th:text="${user.email != null ? user.email : 'Не указана'}">
+                    email@example.com
+                </span>
+            </div>
+
+            <div class="profile-row">
+                <span class="profile-label">Роль</span>
+                <span class="profile-value">
+                    <span class="badge-role"
+                          th:text="${user.role != null ? user.role : 'USER'}">
+                        USER
+                    </span>
+                </span>
+            </div>
+        </section>
+
+        <!-- Дополнительный блок — позже можно вывести статистику / избранное -->
+        <section>
+            <h2 class="profile-section-title">Активность</h2>
+            <p style="margin-top: 0.5rem; color: #b3b3b3; font-size: 0.95rem;">
+                В следующих версиях здесь появятся ваши отзывы, избранные сорта и пивоварни.
+            </p>
+        </section>
+    </article>
+
+    <!-- На всякий случай, если user == null -->
+    <article class="profile-wrapper" th:if="${user == null}">
+        <h1 class="profile-title">Профиль</h1>
+        <p class="profile-subtitle">
+            Не удалось загрузить данные пользователя. Попробуйте войти ещё раз.
+        </p>
+    </article>
 </main>
+
 <footer th:replace="fragments/footer"></footer>
 </body>
 </html>

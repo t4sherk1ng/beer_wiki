@@ -70,21 +70,17 @@ public class UserController {
         return "redirect:/users/login";
     }
 
-//    @GetMapping("/profile")
-//    public String profile(Principal principal, Model model) {
-//        String username = principal.getName();
-//
-//        User user = userService.getUser(username);
-//
-//        UserProfileView userProfileView = new UserProfileView(
-//                username,
-//                user.getEmail(),
-//                user.getFullName(),
-//                user.getAge()
-//        );
-//
-//        model.addAttribute("user", userProfileView);
-//
-//        return "profile";
-//    }
+    @GetMapping("/profile")
+    public String profile(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/users/login";
+        }
+
+        String username = principal.getName();
+
+        userService.findByUsername(username)
+                .ifPresent(userDto -> model.addAttribute("user", userDto));
+
+        return "profile";
+    }
 }

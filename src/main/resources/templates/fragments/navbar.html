@@ -1,8 +1,11 @@
-<nav th:fragment="navbar" style="
-    background: #141414;
-    border-bottom: 2px solid #3c3c3c;
-    padding: 15px 0;
-">
+<nav th:fragment="navbar"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+     style="
+        background: #141414;
+        border-bottom: 2px solid #3c3c3c;
+        padding: 15px 0;
+    ">
     <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
 
 
@@ -20,20 +23,55 @@
                 <a href="/beers/add" style="color: #e6e3df; text-decoration: none;">Добавить</a>
             </div>
 
-            <!-- Кнопка входа -->
-            <a href="/users/login"
-               style="
-                   padding: 6px 14px;
-                   border-radius: 999px;
-                   border: 1px solid #f5c46b;
-                   color: #f5c46b;
-                   text-decoration: none;
-                   font-size: 14px;
-                   font-weight: 600;
-                   letter-spacing: 0.03em;
-               ">
-                Войти
-            </a>
+            <!-- Блок для НЕавторизованных пользователей -->
+            <div sec:authorize="isAnonymous()">
+                <a href="/users/login"
+                   style="
+                       padding: 6px 14px;
+                       border-radius: 999px;
+                       border: 1px solid #f5c46b;
+                       color: #f5c46b;
+                       text-decoration: none;
+                       font-size: 14px;
+                       font-weight: 600;
+                       letter-spacing: 0.03em;
+                   ">
+                    Войти
+                </a>
+            </div>
+
+            <!-- Блок для авторизованных пользователей -->
+            <div sec:authorize="isAuthenticated()" style="display: flex; align-items: center; gap: 12px;">
+                <!-- Чип с логином, ведущий в профиль -->
+                <a href="/users/profile"
+                   style="
+                       padding: 6px 14px;
+                       border-radius: 999px;
+                       border: 1px solid #8ab4ff;
+                       color: #8ab4ff;
+                       text-decoration: none;
+                       font-size: 14px;
+                       font-weight: 600;
+                       letter-spacing: 0.03em;
+                   ">
+                    <span sec:authentication="name">Профиль</span>
+                </a>
+
+                <!-- Ссылка выхода -->
+                <form th:action="@{/users/logout}" method="post" style="margin: 0;">
+                    <button type="submit"
+                            style="
+                                background: none;
+                                border: none;
+                                color: #e6e3df;
+                                font-size: 13px;
+                                cursor: pointer;
+                                text-decoration: underline;
+                            ">
+                        Выйти
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>

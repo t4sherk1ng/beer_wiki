@@ -195,7 +195,7 @@
                 <label for="style" class="form-label">Стиль</label>
                 <select id="style"
                         class="form-select"
-                        th:field="*{style}">
+                        th:field="*{styleName}">
                     <option value="" disabled selected>Выберите стиль</option>
                     <option th:each="s : ${styles}"
                             th:value="${s.id}"
@@ -209,7 +209,7 @@
                 <label for="brewery" class="form-label">Пивоварня</label>
                 <select id="brewery"
                         class="form-select"
-                        th:field="*{brewery}">
+                        th:field="*{breweryName}">
                     <option value="" disabled selected>Выберите пивоварню</option>
                     <option th:each="b : ${breweries}"
                             th:value="${b.id}"

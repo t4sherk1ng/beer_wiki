@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head"></head>
 <body>
 <div th:replace="fragments/navbar"></div>
 <main class="container">
@@ -12,6 +12,8 @@
         <form th:action="@{/users/register}"
               th:method="post"
               th:object="${userRegistrationDto}">
+
+            <!-- Логин -->
             <label for="username">
                 Логин
                 <input th:field="*{username}"
@@ -20,20 +22,12 @@
                        id="username"
                        placeholder="Выберите логин"
                        required/>
-                <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></small>
+                <small th:if="${#fields.hasErrors('username')}"
+                       th:errors="*{username}"
+                       class="text-danger"></small>
             </label>
 
-            <label for="fullname">
-                Полное имя
-                <input th:field="*{fullname}"
-                       th:errorclass="is-invalid"
-                       type="text"
-                       id="fullname"
-                       placeholder="Введите полное имя"
-                       required/>
-                <small th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}" class="text-danger"></small>
-            </label>
-
+            <!-- Электронная почта -->
             <label for="email">
                 Электронная почта
                 <input th:field="*{email}"
@@ -42,24 +36,12 @@
                        id="email"
                        placeholder="ваш.email@example.com"
                        required/>
-                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></small>
             </label>
 
-            <label for="age">
-                Возраст
-                <input th:field="*{age}"
-                       th:errorclass="is-invalid"
-                       type="number"
-                       min="0"
-                       id="age"
-                       placeholder="Введите возраст"
-                       required/>
-                <small th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="text-danger"></small>
-            </label>
-
+            <!-- Пароль (привязан к rawPassword в UserDto) -->
             <label for="password">
                 Пароль
-                <input th:field="*{password}"
+                <input th:field="*{rawPassword}"
                        required
                        minlength="5"
                        maxlength="20"
@@ -67,20 +49,20 @@
                        type="password"
                        id="password"
                        placeholder="Придумайте пароль"/>
-                <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></small>
             </label>
 
+            <!-- Повтор пароля — просто обычное поле без биндинга к DTO,
+                 чтобы не ломать валидацию на стороне сервера -->
             <label for="confirmPassword">
                 Подтвердите пароль
-                <input th:field="*{confirmPassword}"
+                <input
                        required
                        minlength="5"
                        maxlength="20"
-                       th:errorclass="is-invalid"
                        type="password"
                        id="confirmPassword"
+                       name="confirmPassword"
                        placeholder="Повторите пароль"/>
-                <small th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="text-danger"></small>
             </label>
 
             <button type="submit">Зарегистрироваться</button>

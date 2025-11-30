@@ -2,6 +2,10 @@ package com.example.beer_wiki.controller;
 
 import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.service.BeerService;
+import com.example.beer_wiki.service.BeerStyleService;
+import com.example.beer_wiki.service.BreweryService;
+import com.example.beer_wiki.service.implementation.BeerStyleServiceImpl;
+import com.example.beer_wiki.service.implementation.BreweryServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +21,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class BeerController {
 
     private final BeerService beerService;
+    private final BeerStyleService beerStyleService;
+    private final BreweryService breweryService;
 
-    public BeerController(BeerService beerService) {
+    public BeerController(BeerService beerService, BeerStyleService beerStyleService, BreweryService breweryService) {
         this.beerService = beerService;
+        this.beerStyleService = beerStyleService;
+        this.breweryService = breweryService;
     }
 
     @GetMapping("/add")
@@ -27,9 +35,9 @@ public class BeerController {
         if (!model.containsAttribute("beer")) {
             model.addAttribute("beer", new BeerDetailsDto());
         }
-//TODO
-//        model.addAttribute("styles", beerStyleService.findAll());
-//        model.addAttribute("breweries", breweryService.findAll());
+
+        model.addAttribute("styles", beerStyleService.findAll());
+        model.addAttribute("breweries", breweryService.findAll());
         return "beer-add";
     }
 

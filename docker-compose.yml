@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: beer_wiki_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: my_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 4ekhl1DpLe
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432" # если нужно подключаться к БД снаружи VPS (опционально)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d my_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beer_wiki_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Переопределяем настройки из application.properties
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/my_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: 4ekhl1DpLe
+
+      # Опционально: порт и JVM-опции
+      SERVER_PORT: 8081
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    ports:
+      - "8081:8081"

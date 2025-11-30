@@ -3,8 +3,10 @@ package com.example.beer_wiki.service.implementation;
 import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.dto.BeerListDto;
 import com.example.beer_wiki.model.Beer;
+import com.example.beer_wiki.model.BeerStyle;
 import com.example.beer_wiki.model.Brewery;
 import com.example.beer_wiki.repository.BeerRepository;
+import com.example.beer_wiki.repository.BeerStyleRepository;
 import com.example.beer_wiki.repository.BreweryRepository;
 import com.example.beer_wiki.service.BeerService;
 import org.modelmapper.ModelMapper;
@@ -23,15 +25,18 @@ import java.util.stream.Collectors;
 public class BeerServiceImpl implements BeerService {
 
     private final BeerRepository repository;
-    private final BreweryRepository breweryRepository; // добавляем
+    private final BreweryRepository breweryRepository;
+    private final BeerStyleRepository beerStyleRepository;
 
     @Autowired
     private ModelMapper modelMapper;
 
     public BeerServiceImpl(BeerRepository repository,
-                           BreweryRepository breweryRepository) {
+                           BreweryRepository breweryRepository,
+                           BeerStyleRepository beerStyleRepository) {
         this.repository = repository;
         this.breweryRepository = breweryRepository;
+        this.beerStyleRepository = beerStyleRepository;
     }
 
     @Override
@@ -55,7 +60,7 @@ public class BeerServiceImpl implements BeerService {
             throw new RuntimeException("Beer not found with id: " + id);
         }
         BeerDetailsDto dto = convertToDetailsDto(entity);
-        dto.setAverageRating(getAverageRating(id));  // Добавляем расчет
+        dto.setAverageRating(getAverageRating(id));
         return dto;
     }
 
@@ -117,7 +122,6 @@ public class BeerServiceImpl implements BeerService {
             throw new RuntimeException("Beer not found with name: " + beerName);
         }
         BeerDetailsDto dto = convertToDetailsDto(entity);
-//        dto.setAverageRating(getAverageRating());  // Добавляем расчет
         return dto;
     }
 
@@ -142,12 +146,21 @@ public class BeerServiceImpl implements BeerService {
         if (dto.getBreweryName() != null && !dto.getBreweryName().isBlank()) {
             Brewery brewery = breweryRepository.findByName(dto.getBreweryName())
                     .orElseThrow(() -> new RuntimeException(
-                            "Пивоварня с именем '" + dto.getBreweryName() + "' не найдена. " +
-                            "Сначала добавьте пивоварню."));
+                            "Пивоварня с именем '" + dto.getBreweryName() + "' не найдена. Сначала добавьте пивоварню."));
             beer.setBrewery(brewery);
         } else {
             throw new RuntimeException("Название пивоварни обязательно для заполнения.");
         }
+
+        if (dto.getStyleName() != null && !dto.getStyleName().isBlank()) {
+            BeerStyle style = beerStyleRepository.findByName(dto.getStyleName())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Стиль пива '" + dto.getStyleName() + "' не найден. Сначала добавьте стиль."));
+            beer.setStyle(style);
+        } else {
+            throw new RuntimeException("Стиль пива обязателен для заполнения.");
+        }
+
         return beer;
     }
 

@@ -20,13 +20,50 @@
                 <p style="margin: 0; color: #b3b3b3;">
                     Пивоварня:
                     <strong th:text="${beerDetails.breweryName}"></strong>
+                    <span th:if="${beerDetails.breweryLocation != null}">
+                        &nbsp;•&nbsp;
+                        <span th:text="${beerDetails.breweryLocation}"></span>
+                    </span>
                 </p>
             </header>
 
-            <section>
+            <!-- Основные характеристики -->
+            <section style="margin-top: 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
+                <div>
+                    <strong>Стиль:</strong>
+                    <p style="margin: 4px 0;" th:text="${beerDetails.styleName}">—</p>
+                </div>
+                <div>
+                    <strong>ABV:</strong>
+                    <p style="margin: 4px 0;">
+                        <span th:text="${beerDetails.abv}"></span>%
+                    </p>
+                </div>
+                <div>
+                    <strong>IBU:</strong>
+                    <p style="margin: 4px 0;">
+                        <span th:text="${beerDetails.ibu}"></span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- Описание -->
+            <section style="margin-top: 20px;">
                 <h3 style="margin-top: 0; color: #d4a048;">Описание</h3>
                 <p th:text="${beerDetails.description}"></p>
             </section>
+
+            <!-- Ингредиенты -->
+            <section th:if="${beerDetails.ingredients != null and !#lists.isEmpty(beerDetails.ingredients)}"
+                     style="margin-top: 20px;">
+                <h3 style="margin-top: 0; color: #d4a048;">Ингредиенты</h3>
+                <ul style="padding-left: 20px; margin-top: 8px;">
+                    <li th:each="ing : ${beerDetails.ingredients}"
+                        th:text="${ing}"></li>
+                </ul>
+            </section>
+
+
 
             <footer style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
                 <a href="/beers/all-beers"

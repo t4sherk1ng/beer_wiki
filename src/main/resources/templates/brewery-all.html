@@ -12,13 +12,11 @@
         <p style="margin-top: 0;">Просмотр и поиск пивоварен</p>
     </hgroup>
 
-    <!-- Сообщение об успехе -->
     <div th:if="${successMessage}"
          style="padding: 0.8rem 1rem; margin-bottom: 1rem; background-color: #235b2f; border-radius: 8px;">
         <p th:text="${successMessage}" style="margin: 0; color: #e6e3df;"></p>
     </div>
 
-    <!-- Форма поиска -->
     <form method="get" action="/breweries/all" style="margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px;">
             <input type="search"
@@ -34,7 +32,6 @@
         </div>
     </form>
 
-    <!-- Список пивоварен -->
     <section th:if="${breweries != null and !#lists.isEmpty(breweries)}"
              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
         <article class="card" th:each="brewery : ${breweries}">

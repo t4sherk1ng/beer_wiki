@@ -12,13 +12,11 @@
         <p style="margin-top: 0;">Просмотр и поиск сортов в энциклопедии</p>
     </hgroup>
 
-    <!-- Сообщение об успехе -->
     <div th:if="${successMessage}"
          style="padding: 0.8rem 1rem; margin-bottom: 1rem; background-color: #235b2f; border-radius: 8px;">
         <p th:text="${successMessage}" style="margin: 0; color: #e6e3df;"></p>
     </div>
 
-    <!-- Форма поиска -->
     <form method="get" action="/beers/all-beers" style="margin-bottom: 20px;">
         <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px;">
             <input type="search"
@@ -34,7 +32,6 @@
         </div>
     </form>
 
-    <!-- Список пива -->
     <section th:if="${beers != null and !#lists.isEmpty(beers)}"
              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
         <article class="card" th:each="beer : ${beers}">
@@ -47,7 +44,7 @@
                 <strong>Описание:</strong>
                 <span th:text="${#strings.abbreviate(beer.description, 120)}"></span>
             </p>
-            <a th:href="@{/beers/{name}(name=${beer.name})}"
+            <a th:href="@{/beers/{id}(id=${beer.id})}"
                style="font-weight: 600; font-size: 14px;">
                 Подробнее →
             </a>
@@ -58,7 +55,6 @@
         <em>Пиво не найдено. Попробуйте изменить критерии поиска или добавьте новый сорт.</em>
     </p>
 
-    <!-- Пагинация -->
     <nav th:if="${totalPages != null and totalPages > 1}" aria-label="Pagination" style="margin-top: 25px;">
         <ul style="display: flex; justify-content: center; list-style: none; padding: 0; gap: 10px; align-items: center;">
             <li th:if="${currentPage > 0}">

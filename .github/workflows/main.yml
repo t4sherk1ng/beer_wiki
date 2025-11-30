@@ -1,0 +1,45 @@
+name: CI/CD to VPS
+
+on:
+  push:
+    branches: [ main ]  # поменяй, если у тебя другая основная ветка
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # (опционально) прогон тестов/линтовки и сборка на GitHub
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build with Maven (tests)
+        run: mvn -B clean test
+
+      # Деплой на VPS по SSH
+      - name: Deploy to VPS via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            cd ${{ secrets.VPS_WORKDIR }}
+
+            # Подтянуть свежий код
+            git fetch origin
+            git reset --hard origin/main
+
+            # Собрать и перезапустить контейнеры
+            docker compose pull || true   # если используешь образы из registry
+            docker compose up -d --build
+
+            # Можно почистить старые dangling-образы
+            docker image prune -f

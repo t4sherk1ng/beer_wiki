@@ -24,9 +24,12 @@ public class BeerController {
 
     @GetMapping("/add")
     public String addBeer(Model model) {
-        if (!model.containsAttribute("beerModel")) {
-            model.addAttribute("beerModel", new BeerDetailsDto());
+        if (!model.containsAttribute("beer")) {
+            model.addAttribute("beer", new BeerDetailsDto());
         }
+//TODO
+//        model.addAttribute("styles", beerStyleService.findAll());
+//        model.addAttribute("breweries", breweryService.findAll());
         return "beer-add";
     }
 

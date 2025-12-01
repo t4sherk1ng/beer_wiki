@@ -61,6 +61,7 @@ public class AppSecurityConfiguration {
                         .requestMatchers("/", "/users/login", "/users/register", "/users/login-error").permitAll()
                         .requestMatchers("/actuator/**").authenticated()
                         .requestMatchers("/beers/all-beers", "/breweries/all", "/beers/{id}", "/breweries/{id}").permitAll()
+                        .requestMatchers("/beers/add", "/breweries/add").authenticated()
                         .requestMatchers("/users/profile").authenticated()
                         .anyRequest().authenticated()
                 )

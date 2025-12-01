@@ -201,9 +201,11 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-primary">
-                    Добавить пивоварню
-                </button>
+                <sec:authorize access="hasRole('ADMIN')">
+                    <button type="submit" class="btn-primary">
+                        Добавить пивоварню
+                    </button>
+                </sec:authorize>
                 <a href="/breweries/all" class="btn-secondary">
                     Отмена
                 </a>

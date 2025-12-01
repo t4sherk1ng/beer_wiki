@@ -198,7 +198,7 @@
                         th:field="*{styleName}">
                     <option value="" disabled selected>Выберите стиль</option>
                     <option th:each="s : ${styles}"
-                            th:value="${s.id}"
+                            th:value="${s.name}"
                             th:text="${s.name}">
                     </option>
                 </select>
@@ -212,7 +212,7 @@
                         th:field="*{breweryName}">
                     <option value="" disabled selected>Выберите пивоварню</option>
                     <option th:each="b : ${breweries}"
-                            th:value="${b.id}"
+                            th:value="${b.name}"
                             th:text="${b.name}">
                     </option>
                 </select>

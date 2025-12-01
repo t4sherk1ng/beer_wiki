@@ -146,7 +146,7 @@ public class BeerServiceImpl implements BeerService {
         if (dto.getBreweryName() != null && !dto.getBreweryName().isBlank()) {
             Brewery brewery = breweryRepository.findByName(dto.getBreweryName())
                     .orElseThrow(() -> new RuntimeException(
-                            "Пивоварня с именем '" + dto.getBreweryName() + "' не найдена. Сначала добавьте пивоварню."));
+                            "Пивоварня с именем  не найдена. Сначала добавьте пивоварню."));
             beer.setBrewery(brewery);
         } else {
             throw new RuntimeException("Название пивоварни обязательно для заполнения.");

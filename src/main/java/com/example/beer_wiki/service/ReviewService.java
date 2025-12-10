@@ -11,4 +11,6 @@ public interface ReviewService {
     ReviewDto save(ReviewDto dto);
     ReviewDto update(Long id, ReviewDto dto);
     void deleteById(Long id);
+    List<ReviewDto> findByUsername(String username);
+    ReviewDto addReview(Long beerId, String username, double rating, String comment);
 }

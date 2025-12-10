@@ -20,4 +20,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // Кастомный запрос: отзывы для пива с eager-fetching пользователя (чтобы загрузить user сразу)
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.user WHERE r.beer.id = :beerId")
     List<Review> findByBeerIdWithUser(@Param("beerId") Long beerId);
+
+    List<Review> findByBeerIdOrderByDateDesc(Long beerId);
+
+    List<Review> findByUserUsernameOrderByDateDesc(String username);
 }

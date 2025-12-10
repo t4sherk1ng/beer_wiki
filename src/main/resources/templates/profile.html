@@ -147,10 +147,30 @@
 
         <!-- Дополнительный блок — позже можно вывести статистику / избранное -->
         <section>
-            <h2 class="profile-section-title">Активность</h2>
-            <p style="margin-top: 0.5rem; color: #b3b3b3; font-size: 0.95rem;">
-                В следующих версиях здесь появятся ваши отзывы, избранные сорта и пивоварни.
-            </p>
+            <h2 class="profile-section-title">Мои отзывы</h2>
+
+            <div th:if="${#lists.isEmpty(userReviews)}"
+                 style="margin-top: 0.5rem; color: #b3b3b3; font-size: 0.95rem;">
+                Вы пока не оставили ни одного отзыва.
+            </div>
+
+            <div th:if="${!#lists.isEmpty(userReviews)}"
+                 style="margin-top: 0.8rem; display: flex; flex-direction: column; gap: 12px;">
+                <article th:each="r : ${userReviews}" class="card">
+                    <header style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <a th:href="@{|/beers/${r.beerId}|}"
+                           th:text="${r.beerName}"
+                           style="font-weight: 600;"></a>
+                        <span style="color: #f1c97b;"
+                              th:text="${r.rating} + ' / 5'">4.5 / 5</span>
+                    </header>
+                    <p style="margin: 6px 0 0;" th:text="${r.comment}">Комментарий</p>
+                    <small style="color: #888;"
+                           th:text="${#temporals.format(r.date, 'dd.MM.yyyy HH:mm')}">
+                        01.12.2025 12:34
+                    </small>
+                </article>
+            </div>
         </section>
     </article>
 

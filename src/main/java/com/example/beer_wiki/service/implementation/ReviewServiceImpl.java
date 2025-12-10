@@ -1,8 +1,12 @@
 package com.example.beer_wiki.service.implementation;
 
 import com.example.beer_wiki.dto.ReviewDto;
+import com.example.beer_wiki.model.Beer;
 import com.example.beer_wiki.model.Review;
+import com.example.beer_wiki.model.User;
+import com.example.beer_wiki.repository.BeerRepository;
 import com.example.beer_wiki.repository.ReviewRepository;
+import com.example.beer_wiki.repository.UserRepository;
 import com.example.beer_wiki.service.ReviewService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +20,18 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository repository;
+    private final BeerRepository beerRepository;
+    private final UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
 
 
-    public ReviewServiceImpl(ReviewRepository repository) {
+    public ReviewServiceImpl(ReviewRepository repository,
+                             BeerRepository beerRepository,
+                             UserRepository userRepository) {
         this.repository = repository;
+        this.beerRepository = beerRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -74,6 +84,34 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional
     public void deleteById(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewDto> findByUsername(String username) {
+        return repository.findByUserUsernameOrderByDateDesc(username)
+                .stream()
+                .map(r -> modelMapper.map(r, ReviewDto.class))
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public ReviewDto addReview(Long beerId, String username, double rating, String comment) {
+        Beer beer = beerRepository.findById(beerId)
+                .orElseThrow(() -> new IllegalArgumentException("Beer not found: " + beerId));
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+
+        Review review = new Review();
+        review.setBeer(beer);
+        review.setUser(user);
+        review.setRating(rating);
+        review.setComment(comment);
+        // поле date заполняется DEFAULT CURRENT_TIMESTAMP в БД либо через @CreationTimestamp в сущности
+
+        Review saved = repository.save(review);
+        return modelMapper.map(saved, ReviewDto.class);
     }
 
     private ReviewDto convertToDto(Review entity) {

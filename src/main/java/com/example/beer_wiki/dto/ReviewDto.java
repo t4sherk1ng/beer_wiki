@@ -11,6 +11,9 @@ public class ReviewDto {
     private double rating;  // Рейтинг (1-5)
     private String comment;  // Комментарий
     private String date;  // Дата отзыва (как строка, e.g., "2023-10-01T12:00:00")
+    public Long beerId;
+    public String beerName;
+
 
     // Конструкторы
     public ReviewDto() {}

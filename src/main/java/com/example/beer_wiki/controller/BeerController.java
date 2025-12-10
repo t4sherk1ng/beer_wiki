@@ -1,20 +1,27 @@
 package com.example.beer_wiki.controller;
 
 import com.example.beer_wiki.dto.BeerDetailsDto;
+import com.example.beer_wiki.dto.ReviewDto;
 import com.example.beer_wiki.service.BeerService;
 import com.example.beer_wiki.service.BeerStyleService;
 import com.example.beer_wiki.service.BreweryService;
+import com.example.beer_wiki.service.ReviewService;
 import com.example.beer_wiki.service.implementation.BeerStyleServiceImpl;
 import com.example.beer_wiki.service.implementation.BreweryServiceImpl;
+import com.example.beer_wiki.service.implementation.ReviewServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/beers")
@@ -23,11 +30,13 @@ public class BeerController {
     private final BeerService beerService;
     private final BeerStyleService beerStyleService;
     private final BreweryService breweryService;
+    private final ReviewService reviewService;
 
-    public BeerController(BeerService beerService, BeerStyleService beerStyleService, BreweryService breweryService) {
+    public BeerController(BeerService beerService, BeerStyleService beerStyleService, BreweryService breweryService, ReviewService reviewService) {
         this.beerService = beerService;
         this.beerStyleService = beerStyleService;
         this.breweryService = breweryService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/add")
@@ -94,8 +103,32 @@ public class BeerController {
 
     @GetMapping("/{id}")
     public String beerDetails(@PathVariable Long id, Model model) {
-        model.addAttribute("beerDetails", beerService.findById(id));
+        BeerDetailsDto beer = beerService.findById(id);
+        model.addAttribute("beerDetails", beer);
+
+        // отзывы по этому пиву
+        List<ReviewDto> reviews = reviewService.findByBeerId(id);
+        model.addAttribute("userReviews", reviews);
+
+        // объект формы для отзыва
+        model.addAttribute("reviewForm", new ReviewDto());
+
         return "beer-details";
+    }
+
+    @PostMapping("/{id}/reviews")
+    @PreAuthorize("isAuthenticated()")
+    public String addReview(@PathVariable Long id,
+                            @ModelAttribute("reviewForm") ReviewDto reviewForm,
+                            Principal principal) {
+        if (principal == null) {
+            return "redirect:/users/login";
+        }
+
+        String username = principal.getName();
+        reviewService.addReview(id, username, reviewForm.getRating(), reviewForm.getComment());
+
+        return "redirect:/beers/" + id + "#reviews";
     }
 
     @GetMapping("/delete/{id}")

@@ -63,6 +63,77 @@
                 </ul>
             </section>
 
+            <section id="reviews" class="container" style="margin-top: 40px;">
+                <h2 style="font-family: 'Cinzel', serif; font-size: 26px; color: #d4a048;">
+                    Отзывы
+                </h2>
+
+                <!-- Список отзывов -->
+                <div th:if="${#lists.isEmpty(userReviews)}" style="margin-top: 10px; color: #b3b3b3;">
+                    Пока нет ни одного отзыва. Будьте первым!
+                </div>
+
+                <div th:if="${!#lists.isEmpty(userReviews)}" style="margin-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                    <article th:each="r : ${userReviews}" class="card">
+                        <header style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span style="font-weight: 600;" th:text="${r.userName}">user</span>
+                            <span style="color: #f1c97b;"
+                                  th:text="${r.rating} + ' / 5'">4.5 / 5</span>
+                        </header>
+                        <p style="margin: 6px 0 0;" th:text="${r.comment}">Комментарий</p>
+                        <small style="color: #888;"
+                               th:text="${#temporals.format(r.date, 'dd.MM.yyyy HH:mm')}">
+                            01.12.2025 12:34
+                        </small>
+                    </article>
+                </div>
+
+                <!-- ФОРМА ДОБАВЛЕНИЯ ОТЗЫВА: только для авторизованных -->
+                <div sec:authorize="isAuthenticated()" style="margin-top: 25px;">
+                    <h3 style="font-size: 18px; margin-bottom: 10px;">Оставить отзыв</h3>
+                    <form th:action="@{|/beers/${beerDetails.id}/reviews|}"
+                          th:object="${reviewForm}"
+                          method="post"
+                          style="display: flex; flex-direction: column; gap: 10px; max-width: 500px;">
+
+                        <label for="rating" style="display: flex; flex-direction: column; gap: 4px;">
+                            Оценка
+                            <select id="rating"
+                                    th:field="*{rating}"
+                                    style="padding: 6px 8px; border-radius: 6px; border: 1px solid #3c3c3c;
+                               background: rgba(10,10,10,0.9); color: #e6e3df;">
+                                <option th:value="5">5 — Отлично</option>
+                                <option th:value="4">4 — Хорошо</option>
+                                <option th:value="3">3 — Нормально</option>
+                                <option th:value="2">2 — Слабовато</option>
+                                <option th:value="1">1 — Плохо</option>
+                            </select>
+                        </label>
+
+                        <label for="comment" style="display: flex; flex-direction: column; gap: 4px;">
+                            Комментарий
+                            <textarea id="comment"
+                                      th:field="*{comment}"
+                                      rows="3"
+                                      style="padding: 6px 8px; border-radius: 6px; border: 1px solid #3c3c3c;
+                                 background: rgba(10,10,10,0.9); color: #e6e3df;"
+                                      placeholder="Поделитесь впечатлениями о вкусе, аромате, балансе..."></textarea>
+                        </label>
+
+                        <button type="submit"
+                                style="align-self: flex-start; padding: 8px 18px; border-radius: 6px;
+                           border: none; background: #8ab4ff; color: #0b0b0b; font-weight: 600;">
+                            Отправить отзыв
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Для гостей подсказка авторизоваться -->
+                <p sec:authorize="isAnonymous()" style="margin-top: 20px; color: #b3b3b3; font-size: 0.95rem;">
+                    Чтобы оставить отзыв, <a th:href="@{/users/login}">войдите в аккаунт</a>.
+                </p>
+            </section>
+
 
 
             <footer style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">

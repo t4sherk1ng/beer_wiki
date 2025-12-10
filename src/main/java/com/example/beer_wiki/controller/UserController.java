@@ -2,6 +2,7 @@ package com.example.beer_wiki.controller;
 
 import com.example.beer_wiki.dto.UserDto;
 import com.example.beer_wiki.model.User;
+import com.example.beer_wiki.service.ReviewService;
 import com.example.beer_wiki.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,9 +22,11 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final ReviewService reviewService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ReviewService reviewService) {
         this.userService = userService;
+        this.reviewService = reviewService;
     }
 
     @ModelAttribute("userRegistrationDto")
@@ -80,6 +83,8 @@ public class UserController {
 
         userService.findByUsername(username)
                 .ifPresent(userDto -> model.addAttribute("user", userDto));
+
+        model.addAttribute("userReviews", reviewService.findByUsername(username));
 
         return "profile";
     }

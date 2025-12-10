@@ -52,6 +52,12 @@ CREATE TABLE IF NOT EXISTS reviews (
     FOREIGN KEY (beer_id) REFERENCES beers(id) ON DELETE CASCADE
     );
 
+CREATE TABLE IF NOT EXISTS roles (
+                       id SERIAL PRIMARY KEY,
+                       name VARCHAR(255) NOT NULL UNIQUE
+);
+
+
 -- Индексы
 CREATE INDEX IF NOT EXISTS idx_beers_name ON beers(name);
 CREATE INDEX IF NOT EXISTS idx_reviews_beer_id ON reviews(beer_id);

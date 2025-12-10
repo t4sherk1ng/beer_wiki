@@ -2,10 +2,8 @@ package com.example.beer_wiki.controller;
 
 import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.dto.ReviewDto;
-import com.example.beer_wiki.service.BeerService;
-import com.example.beer_wiki.service.BeerStyleService;
-import com.example.beer_wiki.service.BreweryService;
-import com.example.beer_wiki.service.ReviewService;
+import com.example.beer_wiki.model.User;
+import com.example.beer_wiki.service.*;
 import com.example.beer_wiki.service.implementation.BeerStyleServiceImpl;
 import com.example.beer_wiki.service.implementation.BreweryServiceImpl;
 import com.example.beer_wiki.service.implementation.ReviewServiceImpl;
@@ -14,6 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,12 +31,14 @@ public class BeerController {
     private final BeerStyleService beerStyleService;
     private final BreweryService breweryService;
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    public BeerController(BeerService beerService, BeerStyleService beerStyleService, BreweryService breweryService, ReviewService reviewService) {
+    public BeerController(BeerService beerService, BeerStyleService beerStyleService, BreweryService breweryService, ReviewService reviewService,  UserService userService) {
         this.beerService = beerService;
         this.beerStyleService = beerStyleService;
         this.breweryService = breweryService;
         this.reviewService = reviewService;
+        this.userService = userService;
     }
 
     @GetMapping("/add")
@@ -102,15 +104,24 @@ public class BeerController {
 //    }
 
     @GetMapping("/{id}")
-    public String beerDetails(@PathVariable Long id, Model model) {
+    public String beerDetails(@PathVariable Long id,
+                              Model model,
+                              @AuthenticationPrincipal UserDetails userDetails) {
+
         BeerDetailsDto beer = beerService.findById(id);
         model.addAttribute("beerDetails", beer);
 
-        // отзывы по этому пиву
         List<ReviewDto> reviews = reviewService.findByBeerId(id);
         model.addAttribute("userReviews", reviews);
 
-        // объект формы для отзыва
+        boolean canReview = true;
+
+        if (userDetails != null) {
+            User current = userService.findEntityByUsername(userDetails.getUsername());
+            canReview = !reviewService.existsByUserIdAndBeerId(current.getId(), id);
+        }
+
+        model.addAttribute("canReview", canReview);
         model.addAttribute("reviewForm", new ReviewDto());
 
         return "beer-details";

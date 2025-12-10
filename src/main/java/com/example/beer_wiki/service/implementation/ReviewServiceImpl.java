@@ -103,15 +103,24 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
 
+        // Проверка: уже оставил отзыв?
+        if (repository.existsByUserIdAndBeerId(user.getId(), beer.getId())) {
+            throw new IllegalStateException("You have already reviewed this beer!");
+        }
+
         Review review = new Review();
         review.setBeer(beer);
         review.setUser(user);
         review.setRating(rating);
         review.setComment(comment);
-        // поле date заполняется DEFAULT CURRENT_TIMESTAMP в БД либо через @CreationTimestamp в сущности
 
         Review saved = repository.save(review);
         return modelMapper.map(saved, ReviewDto.class);
+    }
+
+    @Override
+    public boolean existsByUserIdAndBeerId(Long userId, Long beerId) {
+        return repository.existsByUserIdAndBeerId(userId, beerId);
     }
 
     private ReviewDto convertToDto(Review entity) {

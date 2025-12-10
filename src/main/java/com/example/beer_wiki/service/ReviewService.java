@@ -13,4 +13,5 @@ public interface ReviewService {
     void deleteById(Long id);
     List<ReviewDto> findByUsername(String username);
     ReviewDto addReview(Long beerId, String username, double rating, String comment);
+    boolean existsByUserIdAndBeerId(Long userId, Long beerId);
 }

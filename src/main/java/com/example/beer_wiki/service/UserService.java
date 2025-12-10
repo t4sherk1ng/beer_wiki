@@ -16,4 +16,6 @@ public interface UserService {
     void deleteById(Long id);
     UserDetails loadUserByUsername(String username);
     User register(String username, String email, String rawPassword);
+    User findEntityByUsername(String username);
+
 }

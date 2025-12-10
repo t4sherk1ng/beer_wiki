@@ -55,13 +55,12 @@
                     ← Назад к списку пивоварен
                 </a>
 
-                <sec:authorize access="hasRole('ADMIN')">
-                    <a th:href="@{/breweries/delete/{id}(id=${breweryDetails.id})}"
-                       onclick="return confirm('Удалить эту пивоварню?')"
-                       style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
-                        Удалить пивоварню
-                    </a>
-                </sec:authorize>
+                <a th:href="@{/breweries/delete/{id}(id=${breweryDetails.id})}" sec:authorize="hasRole('ADMIN')"
+                   onclick="return confirm('Удалить эту пивоварню?')"
+                   style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
+                    Удалить пивоварню
+                </a>
+
             </footer>
         </article>
     </section>

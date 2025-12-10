@@ -147,13 +147,12 @@
                 </a>
 
 
-<!--                <sec:authorize access="hasRole('ADMIN')">-->
-                    <a th:href="@{/beers/delete/{id}(id=${beerDetails.id})}" sec:authorize="hasRole('ADMIN')"
-                       onclick="return confirm('Вы уверены, что хотите удалить это пиво?')"
-                       style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
-                        Удалить пиво
-                    </a>
-<!--                </sec:authorize>-->
+
+                <a th:href="@{/beers/delete/{id}(id=${beerDetails.id})}" sec:authorize="hasRole('ADMIN')"
+                   onclick="return confirm('Вы уверены, что хотите удалить это пиво?')"
+                   style="padding: 8px 16px; border-radius: 6px; border: 1px solid #c0392b; color: #e74c3c;">
+                    Удалить пиво
+                </a>
             </footer>
         </article>
     </section>

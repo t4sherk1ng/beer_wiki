@@ -113,9 +113,6 @@
                     <span th:text="${user.username}">username</span>!
                 </p>
             </div>
-            <div class="profile-chip">
-                <span th:text="${user.username}">username</span>
-            </div>
         </header>
 
         <section>
@@ -133,19 +130,8 @@
                     email@example.com
                 </span>
             </div>
-
-<!--            <div class="profile-row">-->
-<!--                <span class="profile-label">Роль</span>-->
-<!--                <span class="profile-value">-->
-<!--                    <span class="badge-role"-->
-<!--                          th:text="${user.role != null ? user.role : 'USER'}">-->
-<!--                        USER-->
-<!--                    </span>-->
-<!--                </span>-->
-<!--            </div>-->
         </section>
 
-        <!-- Дополнительный блок — позже можно вывести статистику / избранное -->
         <section>
             <h2 class="profile-section-title">Мои отзывы</h2>
 
@@ -165,16 +151,11 @@
                               th:text="${r.rating} + ' / 5'">4.5 / 5</span>
                     </header>
                     <p style="margin: 6px 0 0;" th:text="${r.comment}">Комментарий</p>
-                    <small style="color: #888;"
-                           th:text="${#temporals.format(r.date, 'dd.MM.yyyy HH:mm')}">
-                        01.12.2025 12:34
-                    </small>
                 </article>
             </div>
         </section>
     </article>
 
-    <!-- На всякий случай, если user == null -->
     <article class="profile-wrapper" th:if="${user == null}">
         <h1 class="profile-title">Профиль</h1>
         <p class="profile-subtitle">

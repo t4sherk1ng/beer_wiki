@@ -16,6 +16,7 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 public class AppSecurityConfiguration {
@@ -26,6 +27,11 @@ public class AppSecurityConfiguration {
     // public AppSecurityConfiguration(UserDetailsService userDetailsService) {
     //     this.userDetailsService = userDetailsService;
     // }
+
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
 
     @Bean
     public UserDetailsService userDetailsService(UserRepository userRepository) {

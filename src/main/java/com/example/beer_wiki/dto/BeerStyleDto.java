@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class BeerStyleDto {
     private Long id;
-    private String name;  // e.g., "IPA"
+    private String name;
     private String description;
 
     public BeerStyleDto() {}

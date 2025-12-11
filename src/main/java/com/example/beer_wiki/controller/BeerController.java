@@ -97,12 +97,6 @@ public class BeerController {
         return "beer-all";
     }
 
-//    @GetMapping("/{name}")
-//    public String beerDetails(@PathVariable String name, Model model) {
-//        model.addAttribute("beerDetails", beerService.beerDetails(name));
-//        return "beer-details";
-//    }
-
     @GetMapping("/{id}")
     public String beerDetails(@PathVariable Long id,
                               Model model,

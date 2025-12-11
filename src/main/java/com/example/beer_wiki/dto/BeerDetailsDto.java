@@ -20,6 +20,5 @@ public class BeerDetailsDto {
     private double averageRating;
     private List<ReviewDto> reviews;  // Список отзывов
 
-    // Конструкторы
     public BeerDetailsDto() {}
 }

@@ -58,7 +58,7 @@ public class BeerStyleServiceImpl implements BeerStyleService {
     public BeerStyleDto update(Long id, BeerStyleDto dto) {
         BeerStyle existing = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("BeerStyle not found with id: " + id));
-        modelMapper.map(dto, existing);  // Обновляем поля
+        modelMapper.map(dto, existing);
         BeerStyle updated = repository.save(existing);
         return convertToDto(updated);
     }

@@ -103,7 +103,6 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
 
-        // Проверка: уже оставил отзыв?
         if (repository.existsByUserIdAndBeerId(user.getId(), beer.getId())) {
             throw new IllegalStateException("You have already reviewed this beer!");
         }

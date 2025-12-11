@@ -7,14 +7,12 @@ import lombok.Setter;
 @Setter
 public class ReviewDto {
     private Long id;
-    private String userName;  // Имя пользователя
-    private double rating;  // Рейтинг (1-5)
-    private String comment;  // Комментарий
-    private String date;  // Дата отзыва (как строка, e.g., "2023-10-01T12:00:00")
+    private String userName;
+    private double rating;
+    private String comment;
+    private String date;
     public Long beerId;
     public String beerName;
 
-
-    // Конструкторы
     public ReviewDto() {}
 }

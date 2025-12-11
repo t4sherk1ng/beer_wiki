@@ -11,10 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface BreweryRepository extends JpaRepository<Brewery, Long> {
-    // Кастомный метод: поиск пивоварен по части имени (для поиска)
     List<Brewery> findByNameContainingIgnoreCase(String name);
 
-    // Кастомный запрос: получение пивоварни с eager-fetching связанных пив (чтобы загрузить сразу)
     @Query("SELECT br FROM Brewery br LEFT JOIN FETCH br.beers WHERE br.id = :id")
     Brewery findByIdWithBeers(@Param("id") Long id);
 

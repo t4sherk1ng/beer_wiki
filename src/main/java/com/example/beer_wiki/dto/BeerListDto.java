@@ -8,11 +8,11 @@ import lombok.Setter;
 public class BeerListDto {
 
     private Long id;
-    private String name;  // Название сорта
-    private String styleName;  // Название стиля (e.g., IPA)
-    private double abv;  // Алкогольный объем
-    private int ibu;  // Горечь
-    private String breweryName;  // Название пивоварни
+    private String name;
+    private String styleName;
+    private double abv;
+    private int ibu;
+    private String breweryName;
     private double averageRating;
     private String imageUrl;
     private String description;

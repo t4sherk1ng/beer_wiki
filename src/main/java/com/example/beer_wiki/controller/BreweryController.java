@@ -2,6 +2,7 @@ package com.example.beer_wiki.controller;
 
 import com.example.beer_wiki.dto.BreweryDto;
 import com.example.beer_wiki.service.BreweryService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/breweries")
 public class BreweryController {
@@ -17,11 +19,13 @@ public class BreweryController {
     private final BreweryService breweryService;
 
     public BreweryController(BreweryService breweryService) {
+        log.debug("Инициализация BreweryController");
         this.breweryService = breweryService;
     }
 
     @GetMapping("/add")
     public String addBrewery(Model model) {
+        log.debug("Отображение формы добавления пивоварни");
         if (!model.containsAttribute("breweryModel")) {
             model.addAttribute("breweryModel", new BreweryDto());
         }
@@ -54,7 +58,7 @@ public class BreweryController {
     @GetMapping("/all")
     public String showAllBreweries(@RequestParam(required = false) String search,
                                    Model model) {
-
+        log.debug("Отображение страницы всех пивоварен");
         List<BreweryDto> breweries;
         if (search != null && !search.trim().isEmpty()) {
             breweries = breweryService.searchByName(search);
@@ -69,6 +73,7 @@ public class BreweryController {
 
     @GetMapping("/{id}")
     public String breweryDetails(@PathVariable Long id, Model model) {
+        log.debug("Отображение страницы пивоварни " + breweryService.findById(id).getName());
         BreweryDto brewery = breweryService.findByIdWithBeers(id);
         model.addAttribute("breweryDetails", brewery);
         return "brewery-details";

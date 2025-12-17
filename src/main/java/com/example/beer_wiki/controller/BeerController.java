@@ -7,6 +7,7 @@ import com.example.beer_wiki.service.*;
 import com.example.beer_wiki.service.implementation.BeerStyleServiceImpl;
 import com.example.beer_wiki.service.implementation.BreweryServiceImpl;
 import com.example.beer_wiki.service.implementation.ReviewServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.security.Principal;
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/beers")
 public class BeerController {
@@ -39,10 +41,12 @@ public class BeerController {
         this.breweryService = breweryService;
         this.reviewService = reviewService;
         this.userService = userService;
+        log.debug("Инициализация BeerController");
     }
 
     @GetMapping("/add")
     public String addBeer(Model model) {
+        log.debug("Отображение формы добавления пива");
         if (!model.containsAttribute("beer")) {
             model.addAttribute("beer", new BeerDetailsDto());
         }
@@ -80,7 +84,7 @@ public class BeerController {
             @RequestParam(defaultValue = "name") String sortBy,
             @RequestParam(required = false) String search,
             Model model) {
-
+        log.debug("Отображение списка пива");
         if (search != null && !search.trim().isEmpty()) {
             model.addAttribute("beers", beerService.searchByName(search));
             model.addAttribute("search", search);
@@ -101,7 +105,7 @@ public class BeerController {
     public String beerDetails(@PathVariable Long id,
                               Model model,
                               @AuthenticationPrincipal UserDetails userDetails) {
-
+        log.debug("Отображение страницы пива " + beerService.findById(id).getName());
         BeerDetailsDto beer = beerService.findById(id);
         model.addAttribute("beerDetails", beer);
 

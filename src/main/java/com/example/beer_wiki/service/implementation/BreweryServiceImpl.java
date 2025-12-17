@@ -6,6 +6,8 @@ import com.example.beer_wiki.service.BreweryService;
 import com.example.beer_wiki.model.Brewery;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class BreweryServiceImpl implements BreweryService {
     }
 
     @Override
+    @Cacheable(value = "breweries", key = "'all'")
     public List<BreweryDto> findAll() {
         return repository.findAll().stream()
                 .map(this::convertToDto)
@@ -57,6 +60,7 @@ public class BreweryServiceImpl implements BreweryService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "breweries", allEntries = true)
     public BreweryDto save(BreweryDto dto) {
         Brewery entity = convertToEntity(dto);
         Brewery saved = repository.save(entity);

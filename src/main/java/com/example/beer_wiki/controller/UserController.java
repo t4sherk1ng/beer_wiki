@@ -4,6 +4,7 @@ import com.example.beer_wiki.dto.UserDto;
 import com.example.beer_wiki.model.User;
 import com.example.beer_wiki.service.ReviewService;
 import com.example.beer_wiki.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
+@Slf4j
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -27,6 +29,7 @@ public class UserController {
     public UserController(UserService userService, ReviewService reviewService) {
         this.userService = userService;
         this.reviewService = reviewService;
+        log.info("UserController инициализирован");
     }
 
     @ModelAttribute("userRegistrationDto")
@@ -36,6 +39,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String register() {
+        log.debug("Отображение формы регистрации");
         return "register";
     }
 
@@ -59,6 +63,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
+        log.debug("Отображение формы логина");
         return "login";
     }
 
@@ -66,7 +71,7 @@ public class UserController {
     public String onFailedLogin(
             @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String username,
             RedirectAttributes redirectAttributes) {
-
+        log.debug("Ошибка логина");
         redirectAttributes.addFlashAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY, username);
         redirectAttributes.addFlashAttribute("badCredentials", true);
 
@@ -78,7 +83,7 @@ public class UserController {
         if (principal == null) {
             return "redirect:/users/login";
         }
-
+        log.debug("Отображение профиля");
         String username = principal.getName();
 
         userService.findByUsername(username)

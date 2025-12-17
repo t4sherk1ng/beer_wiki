@@ -11,6 +11,8 @@ import com.example.beer_wiki.repository.BreweryRepository;
 import com.example.beer_wiki.service.BeerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +49,7 @@ public class BeerServiceImpl implements BeerService {
 
 
     @Override
+    @Cacheable(value = "beers", key = "'all'")
     public List<BeerListDto> findAll() {
         return repository.findAll().stream()
                 .map(this::convertToListDto)
@@ -87,6 +90,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "beers", allEntries = true)
     public BeerDetailsDto save(BeerDetailsDto dto) {
         Beer entity = convertToEntity(dto);
         Beer saved = repository.save(entity);
@@ -105,6 +109,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     @Transactional
+    @CacheEvict(cacheNames = "beers", allEntries = true)
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

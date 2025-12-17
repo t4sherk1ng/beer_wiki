@@ -15,9 +15,9 @@
     position: relative;
 
     width: 100%;
-    height: 100vh;       /* максимум по высоте окна */
-    max-height: 100vh;   /* не больше окна */
-    background-size: contain;  /* изображение ужимается целиком */
+    height: 100vh;
+    max-height: 100vh;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 ">
@@ -68,8 +68,7 @@
     </div>
 </section>
 
-<section class="container" style="margin-top: 50px;">
-
+<section th:if="${beers != null and !#lists.isEmpty(beers)}" class="container" style="margin-top: 50px;">
     <h2 style="
         font-family: 'Cinzel', serif;
         font-size: 32px;
@@ -82,31 +81,26 @@
         grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
         gap: 20px;
     ">
-
-        <div class="card">
-            <h3 style="color: #d4a048; margin-top: 0;">IPA</h3>
-            <p>Хмелевой, ароматный, яркий вкус. Флагман крафтового пенного.</p>
+        <div class="card" th:each="beer : ${beers}">
+            <h3 th:text="${beer.name}" style="margin-top: 0;"></h3>
+            <p style="margin: 4px 0;">
+                <strong>Пивоварня:</strong>
+                <span th:text="${beer.breweryName}"></span>
+            </p>
+            <p style="margin: 4px 0 10px;">
+                <strong>Описание:</strong>
+                <span th:text="${#strings.abbreviate(beer.description, 120)}"></span>
+            </p>
+            <a th:href="@{/beers/{id}(id=${beer.id})}"
+               style="font-weight: 600; font-size: 14px;">
+                Подробнее →
+            </a>
         </div>
-
-        <div class="card">
-            <h3 style="color: #d4a048; margin-top: 0;">Stout</h3>
-            <p>Густое, тёмное, с нотами кофе, шоколада и жареного солода.</p>
-        </div>
-
-        <div class="card">
-            <h3 style="color: #d4a048; margin-top: 0;">Lager</h3>
-            <p>Классика: лёгкий, мягкий, освежающий вкус и чистый профиль.</p>
-        </div>
-
-        <div class="card">
-            <h3 style="color: #d4a048; margin-top: 0;">Wheat Beer</h3>
-            <p>Нефильтрованное, мягкое, фруктовое. Идеально летом.</p>
-        </div>
-
     </div>
 </section>
 
-<section class="container" style="margin-top: 50px; margin-bottom: 50px;">
+<section th:if="${breweries != null and !#lists.isEmpty(breweries)}"
+         class="container" style="margin-top: 50px; margin-bottom: 50px;">
     <h2 style="
             font-family: 'Cinzel', serif;
             font-size: 32px;
@@ -124,26 +118,21 @@
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         ">
-        <div class="card">
-            <h3 style="color: #8ab4ff; margin-top: 0;">Northern Hops Brewery</h3>
-            <p>Небольшая крафтовая пивоварня, специализирующаяся на IPA и Pale Ale
-                с упором на ароматный американский хмель.</p>
-            <a href="/breweries/all" style="font-weight: 600;">Смотреть все сорта пивоварни →</a>
-        </div>
-
-        <div class="card">
-            <h3 style="color: #8ab4ff; margin-top: 0;">Old Town Brew Co.</h3>
-            <p>Традиционная европейская пивоварня c лагерами и тёмными сортами,
-                выдержанными по классическим рецептам.</p>
-            <a href="/breweries/all" style="font-weight: 600;">Открыть профиль пивоварни →</a>
-        </div>
-
-        <div class="card">
-            <h3 style="color: #8ab4ff; margin-top: 0;">Sunrise Wheat Lab</h3>
-            <p>Экспериментальная пивоварня, делающая акцент на пшеничных сортах,
-                фруктовых и кислых стилях.</p>
-            <a href="/breweries/all" style="font-weight: 600;">Найти сорта этой пивоварни →</a>
-        </div>
+        <article class="card" th:each="brewery : ${breweries}">
+            <h3 th:text="${brewery.name}" style="margin-top: 0;"></h3>
+            <p style="margin: 4px 0;">
+                <strong>Локация:</strong>
+                <span th:text="${brewery.location}"></span>
+            </p>
+            <p style="margin: 4px 0 10px;">
+                <strong>Описание:</strong>
+                <span th:text="${#strings.abbreviate(brewery.description, 120)}"></span>
+            </p>
+            <a th:href="@{/breweries/{id}(id=${brewery.id})}"
+               style="font-weight: 600; font-size: 14px;">
+                Подробнее о пивоварне →
+            </a>
+        </article>
     </div>
 </section>
 

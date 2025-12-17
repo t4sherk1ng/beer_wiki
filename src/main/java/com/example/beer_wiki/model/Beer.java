@@ -10,8 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "beers")
-@Getter
-@Setter
+
 public class Beer {
 
     @Id
@@ -42,4 +41,76 @@ public class Beer {
 
     @OneToMany(mappedBy = "beer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getAbv() {
+        return abv;
+    }
+
+    public void setAbv(double abv) {
+        this.abv = abv;
+    }
+
+    public List<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public int getIbu() {
+        return ibu;
+    }
+
+    public void setIbu(int ibu) {
+        this.ibu = ibu;
+    }
+
+    public Brewery getBrewery() {
+        return brewery;
+    }
+
+    public void setBrewery(Brewery brewery) {
+        this.brewery = brewery;
+    }
+
+    public BeerStyle getStyle() {
+        return style;
+    }
+
+    public void setStyle(BeerStyle style) {
+        this.style = style;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
 }

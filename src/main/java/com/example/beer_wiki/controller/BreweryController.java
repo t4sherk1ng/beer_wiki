@@ -3,11 +3,16 @@ package com.example.beer_wiki.controller;
 import com.example.beer_wiki.dto.BreweryDto;
 import com.example.beer_wiki.service.BreweryService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -57,6 +62,9 @@ public class BreweryController {
 
     @GetMapping("/all")
     public String showAllBreweries(@RequestParam(required = false) String search,
+                                   @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size,
+                                   @RequestParam(defaultValue = "name") String sortBy,
                                    Model model) {
         log.debug("Отображение страницы всех пивоварен");
         List<BreweryDto> breweries;
@@ -64,10 +72,16 @@ public class BreweryController {
             breweries = breweryService.searchByName(search);
             model.addAttribute("search", search);
         } else {
-            breweries = breweryService.findAll();
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
+            Page<BreweryDto> breweryPage = breweryService.findAllPaginated(pageable);
+//            breweries = breweryService.findAll();findAll
+            model.addAttribute("breweries", breweryPage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", breweryPage.getTotalPages());
+            model.addAttribute("totalItems", breweryPage.getTotalElements());
         }
 
-        model.addAttribute("breweries", breweries);
+//        model.addAttribute("breweries", breweryPage);
         return "brewery-all";
     }
 

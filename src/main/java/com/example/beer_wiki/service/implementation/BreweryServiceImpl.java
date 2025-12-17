@@ -1,6 +1,8 @@
 package com.example.beer_wiki.service.implementation;
 
+import com.example.beer_wiki.dto.BeerDetailsDto;
 import com.example.beer_wiki.dto.BreweryDto;
+import com.example.beer_wiki.model.Beer;
 import com.example.beer_wiki.repository.BreweryRepository;
 import com.example.beer_wiki.service.BreweryService;
 import com.example.beer_wiki.model.Brewery;
@@ -8,8 +10,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +40,12 @@ public class BreweryServiceImpl implements BreweryService {
         return repository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<BreweryDto> findAllPaginated(Pageable pageable) {
+        Page<Brewery> page = repository.findAll(pageable);
+        return page.map(brewery -> modelMapper.map(brewery,BreweryDto.class));
     }
 
     @Override

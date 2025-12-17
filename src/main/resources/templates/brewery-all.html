@@ -54,6 +54,30 @@
     <p th:if="${breweries == null or #lists.isEmpty(breweries)}">
         <em>Пивоварни не найдены. Попробуйте изменить критерии поиска или добавьте новую пивоварню.</em>
     </p>
+
+    <nav th:if="${totalPages != null and totalPages > 1}" aria-label="Pagination" style="margin-top: 25px;">
+        <ul style="display: flex; justify-content: center; list-style: none; padding: 0; gap: 10px; align-items: center;">
+            <li th:if="${currentPage > 0}">
+                <a th:href="@{/breweries/all(page=${currentPage - 1}, size=10)}"
+                   style="padding: 6px 14px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    ← Назад
+                </a>
+            </li>
+            <li>
+                <span>Страница
+                    <strong th:text="${currentPage + 1}"></strong>
+                    из
+                    <strong th:text="${totalPages}"></strong>
+                </span>
+            </li>
+            <li th:if="${currentPage + 1 < totalPages}">
+                <a th:href="@{/breweries/all(page=${currentPage + 1}, size=10)}"
+                   style="padding: 6px 14px; border-radius: 6px; border: 1px solid #3c3c3c; color: #e6e3df;">
+                    Вперёд →
+                </a>
+            </li>
+        </ul>
+    </nav>
 </main>
 
 <footer th:replace="fragments/footer :: footer"></footer>
